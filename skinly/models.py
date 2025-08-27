@@ -22,6 +22,47 @@ class SkinType(models.TextChoices):
     SENSITIVE = "SENSITIVE", "Sensitive"
     NORMAL = "NORMAL", "Normal"
 
+class ProductType(models.TextChoices):
+    FOUNDATION = "FOUNDATION", "Foundation"
+    CONCEALER = "CONCEALER", "Concealer"
+    POWDER = "POWDER", "Powder"
+    BLUSH = "BLUSH", "Blush"
+    EYESHADOW = "EYESHADOW", "Eyeshadow"
+    LIPSTICK = "LIPSTICK", "Lipstick"
+    MASCARA = "MASCARA", "Mascara"
+    EYELINER = "EYELINER", "Eyeliner"
+    SKINCARE = "SKINCARE", "Skincare"
+    OTHER = "OTHER", "Other"
+
+class FinishType(models.TextChoices):
+    MATTE = "MATTE", "Matte"
+    DEWY = "DEWY", "Dewy"
+    SATIN = "SATIN", "Satin"
+    GLOSSY = "GLOSSY", "Glossy"
+    SHIMMER = "SHIMMER", "Shimmer"
+
+class OrderStatus(models.TextChoices):
+    PENDING = "PENDING", "Pending"
+    SHIPPED = "SHIPPED", "Shipped"
+    DELIVERED = "DELIVERED", "Delivered"
+    CANCELED = "CANCELED", "Canceled"
+
+class PaymentMethodType(models.TextChoices):
+    CREDIT_CARD = "CREDIT_CARD", "Credit Card"
+    DEBIT_CARD = "DEBIT_CARD", "Debit Card"
+    PAYPAL = "PAYPAL", "PayPal"
+    BANK_TRANSFER = "BANK_TRANSFER", "Bank Transfer"
+    CASH_ON_DELIVERY = "CASH_ON_DELIVERY", "Cash on Delivery"
+
+class PaymentStatus(models.TextChoices):
+    PENDING = "PENDING", "Pending"
+    COMPLETED = "COMPLETED", "Completed"
+    FAILED = "FAILED", "Failed"
+
+class PriceRange:
+    min_price: Decimal
+    max_price: Decimal
+
 
 # ─────────────────────────────────────────
 # Price range para el TasteProfile
@@ -147,3 +188,134 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return self.get_full_name() or self.username
+
+## PRODUCT
+
+class Product(models.Model):
+    name = models.CharField(max_length=255)
+    brand = models.ForeignKey("catalog.Brand", on_delete=models.CASCADE, related_name="products")
+    product_type = models.ForeignKey("catalog.ProductType", on_delete=models.CASCADE, related_name="products")
+    finish_type = models.ForeignKey("catalog.FinishType", on_delete=models.CASCADE, related_name="products")
+    color = models.ForeignKey("catalog.Color", on_delete=models.CASCADE, related_name="products")
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    skin_type_compatibility = models.ForeignKey(
+        "catalog.SkinType", on_delete=models.SET_NULL, null=True, blank=True, related_name="compatible_products"
+    )
+    stock_quantity = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
+
+    def __str__(self) -> str:
+        return self.name
+
+class Brand(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True)
+    products = models.ManyToManyField("catalog.Product", through=Product, related_name="brands")
+
+
+    class Meta:
+        verbose_name = "Brand"
+        verbose_name_plural = "Brands"
+
+    def __str__(self) -> str:
+        return self.name
+
+class Color(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    hex_code = models.CharField(max_length=7, unique=True)  # e.g., #FFFFFF
+
+    class Meta:
+        verbose_name = "Color"
+        verbose_name_plural = "Colors"
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.hex_code})"
+    
+## Cart
+
+class Cart(models.Model):
+    user = models.OneToOneField("User", on_delete=models.CASCADE, related_name="cart")
+    items = models.ManyToManyField("catalog.Product", through="CartItem", related_name="carts")
+
+    class Meta:
+        verbose_name = "Cart"
+        verbose_name_plural = "Carts"
+
+    def __str__(self) -> str:
+        return f"Cart of {self.user}"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
+    product = models.ForeignKey("catalog.Product", on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ("cart", "product")
+        verbose_name = "Cart Item"
+        verbose_name_plural = "Cart Items"
+
+    def __str__(self) -> str:
+        return f"{self.quantity} x {self.product.name} in {self.cart}"
+
+class Order(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="orders")
+    products = models.ManyToManyField("catalog.Product", through="OrderItem", related_name="orders")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Order"
+        verbose_name_plural = "Orders"
+
+    def __str__(self) -> str:
+        return f"Order #{self.id} by {self.user}"
+
+class Payment(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name="payment")
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = models.CharField(max_length=50)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=[
+        ("PENDING", "Pending"),
+        ("COMPLETED", "Completed"),
+        ("FAILED", "Failed")
+    ], default="PENDING")
+
+    class Meta:
+        verbose_name = "Payment"
+        verbose_name_plural = "Payments"
+
+    def __str__(self) -> str:
+        return f"Payment for Order #{self.order.id} - {self.status}"
+
+class PaymentMethod(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Payment Method"
+        verbose_name_plural = "Payment Methods"
+
+    def __str__(self) -> str:
+        return self.name
+
+class Review(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="reviews")
+    product = models.ForeignKey("catalog.Product", on_delete=models.CASCADE, related_name="reviews")
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MinValueValidator(5)])
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "product")
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"
+
+    def __str__(self) -> str:
+        return f"Review by {self.user} for {self.product} - {self.rating} stars"
+
