@@ -356,6 +356,8 @@ def add_review(request, product_id):
 @login_required
 def profile_view(request):
     """User profile page"""
+    from .models import ShippingAddress, UserCouponAvailable, Color
+    
     if request.method == 'POST':
         # Update profile
         request.user.first_name = request.POST.get('first_name', '')
@@ -366,21 +368,63 @@ def profile_view(request):
         request.user.save()
         
         # Update taste profile
-        taste_profile, created = TasteProfile.objects.get_or_create(
-            user=request.user,
-            defaults={'user': request.user}
-        )
-        
         if not request.user.taste_profile:
+            taste_profile = TasteProfile.objects.create()
             request.user.taste_profile = taste_profile
             request.user.save()
+        else:
+            taste_profile = request.user.taste_profile
+        
+        # Update taste profile preferences
+        preferred_product_types = request.POST.getlist('preferred_product_types')
+        preferred_finish_types = request.POST.getlist('preferred_finish_types')
+        preferred_colors = request.POST.getlist('preferred_colors')
+        
+        taste_profile.preferred_product_types = ','.join(preferred_product_types)
+        taste_profile.preferred_finish_types = ','.join(preferred_finish_types)
+        taste_profile.save()
+        
+        # Update preferred colors
+        taste_profile.preferred_colors.clear()
+        if preferred_colors:
+            taste_profile.preferred_colors.set(preferred_colors)
         
         messages.success(request, 'Profile updated successfully')
-        return redirect('profile')
+        return redirect('skinly:profile')
+    
+    # Get user data for display
+    user_reviews = Review.objects.filter(user=request.user).order_by('-created_at')[:10]
+    user_orders = Order.objects.filter(user=request.user).order_by('-created_at')[:10]
+    shipping_addresses = ShippingAddress.objects.filter(user=request.user)
+    available_coupons = UserCouponAvailable.objects.filter(
+        user=request.user, 
+        is_used=False,
+        coupon__is_active=True
+    ).select_related('coupon')
+    
+    # Get taste profile data
+    taste_profile = request.user.taste_profile
+    current_product_types = []
+    current_finish_types = []
+    if taste_profile:
+        if taste_profile.preferred_product_types:
+            current_product_types = taste_profile.preferred_product_types.split(',')
+        if taste_profile.preferred_finish_types:
+            current_finish_types = taste_profile.preferred_finish_types.split(',')
     
     context = {
         'skin_tones': SkinTone.choices,
         'skin_types': SkinType.choices,
+        'product_types': ProductType.choices,
+        'finish_types': FinishType.choices,
+        'colors': Color.objects.all(),
+        'user_reviews': user_reviews,
+        'user_orders': user_orders,
+        'shipping_addresses': shipping_addresses,
+        'available_coupons': available_coupons,
+        'current_product_types': current_product_types,
+        'current_finish_types': current_finish_types,
+        'taste_profile': taste_profile,
     }
     return render(request, 'skinly/profile.html', context)
 
@@ -423,6 +467,14 @@ def shipping_info_view(request):
 def returns_view(request):
     """Returns policy FAQ page"""
     return render(request, 'skinly/returns.html')
+
+def privacy_policy_view(request):
+    """Privacy policy page"""
+    return render(request, 'skinly/privacy_policy.html')
+
+def terms_of_service_view(request):
+    """Terms of service page"""
+    return render(request, 'skinly/terms_of_service.html')
 
 @require_POST
 def newsletter_subscribe(request):

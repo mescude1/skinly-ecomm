@@ -42,6 +42,10 @@ urlpatterns = [
     path('shipping/', views.shipping_info_view, name='shipping_info'),
     path('returns/', views.returns_view, name='returns'),
     
+    # Legal Pages
+    path('privacy-policy/', views.privacy_policy_view, name='privacy_policy'),
+    path('terms-of-service/', views.terms_of_service_view, name='terms_of_service'),
+    
     # Newsletter
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
     
