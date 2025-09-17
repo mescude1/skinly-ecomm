@@ -4,7 +4,7 @@ from .models import (
     User, PriceRange, TasteProfile, TasteBrandAffinity,
     Product, Brand, Color, Cart, CartItem, Order, OrderItem,
     Payment, PaymentMethod, Review, RecommendationEngine,
-    SearchEngine, InventoryManager
+    SearchEngine, InventoryManager, NewsletterSubscriber, NewsletterCampaign
 )
 
 @admin.register(User)
@@ -70,6 +70,48 @@ class TasteProfileAdmin(admin.ModelAdmin):
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ("order", "amount", "payment_method", "status", "payment_date")
     list_filter = ("status", "payment_date")
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ("email", "name", "subscribed_at", "is_active")
+    list_filter = ("is_active", "subscribed_at")
+    search_fields = ("email", "name")
+    readonly_fields = ("subscribed_at",)
+    filter_horizontal = ("interests",)
+    
+    actions = ["activate_subscribers", "deactivate_subscribers"]
+    
+    def activate_subscribers(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"{updated} subscribers activated.")
+    activate_subscribers.short_description = "Activate selected subscribers"
+    
+    def deactivate_subscribers(self, request, queryset):
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f"{updated} subscribers deactivated.")
+    deactivate_subscribers.short_description = "Deactivate selected subscribers"
+
+@admin.register(NewsletterCampaign)
+class NewsletterCampaignAdmin(admin.ModelAdmin):
+    list_display = ("title", "subject", "sent_at", "recipients_count")
+    list_filter = ("sent_at",)
+    search_fields = ("title", "subject")
+    readonly_fields = ("sent_at", "recipients_count")
+    filter_horizontal = ("featured_products",)
+    
+    fieldsets = (
+        ("Campaign Details", {
+            "fields": ("title", "subject", "content")
+        }),
+        ("Products", {
+            "fields": ("featured_products",),
+            "description": "Select products to feature in this newsletter campaign"
+        }),
+        ("Campaign Stats", {
+            "fields": ("sent_at", "recipients_count"),
+            "classes": ("collapse",)
+        }),
+    )
 
 # Register remaining models
 admin.site.register(PriceRange)

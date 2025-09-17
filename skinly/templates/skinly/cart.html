@@ -1,0 +1,421 @@
+{% extends 'skinly/base.html' %}
+
+{% block title %}Shopping Cart - Skinly{% endblock %}
+
+{% block content %}
+<!-- Cart Header -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--light-cream) 0%, var(--primary-sand) 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Shopping Cart</h1>
+                <p class="lead" style="color: var(--warm-brown);">Review your selected items and proceed to checkout</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-shopping-cart" style="font-size: 5rem; color: var(--primary-gold); opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cart Content -->
+<section class="py-5">
+    <div class="container">
+        {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Cart Items -->
+                <div class="card border-0" style="background: var(--card-bg);">
+                    <div class="card-header" style="background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%); border-bottom: 2px solid var(--primary-gold);">
+                        <h5 class="mb-0" style="color: var(--text-primary);">
+                            <i class="fas fa-shopping-basket me-2"></i>Cart Items ({{ cart_items.count }})
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        {% for item in cart_items %}
+                        <div class="cart-item border-bottom" id="cart-item-{{ item.id }}">
+                            <div class="row align-items-center p-4">
+                                <div class="col-md-2">
+                                    <div class="product-image d-flex align-items-center justify-content-center" style="height: 120px; background: linear-gradient(135deg, var(--accent-beige) 0%, var(--primary-sand) 100%); border-radius: 10px;">
+                                        <i class="fas fa-image" style="font-size: 2rem; color: var(--text-light);"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="mb-1" style="color: var(--text-primary);">{{ item.product.name }}</h6>
+                                    <p class="text-muted small mb-1">{{ item.product.brand.name }}</p>
+                                    <p class="text-muted small mb-2">{{ item.product.get_product_type_display }}</p>
+                                    {% if item.product.color %}
+                                    <span class="badge" style="background: var(--muted-gold); color: var(--dark-brown);">
+                                        {{ item.product.color.name }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-2 text-center">
+                                    <span class="price h5 mb-0" style="color: var(--primary-gold);">${{ item.product.price }}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <form method="post" action="{% url 'skinly:update_cart_item' item.id %}" class="update-cart-form">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="decreaseQuantity({{ item.id }})">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="number" name="quantity" class="form-control text-center" 
+                                                   value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}" 
+                                                   id="quantity-{{ item.id }}" onchange="updateCartItem({{ item.id }})">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="increaseQuantity({{ item.id }})">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <small class="text-muted">Max: {{ item.product.stock_quantity }}</small>
+                                    </form>
+                                </div>
+                                <div class="col-md-1 text-center">
+                                    <span class="item-total h6" style="color: var(--text-primary);" id="item-total-{{ item.id }}">
+                                        ${{ item.product.price|floatformat:2 }}
+                                    </span>
+                                </div>
+                                <div class="col-md-1 text-center">
+                                    <button class="btn btn-link text-danger p-0" onclick="removeCartItem({{ item.id }})" title="Remove item">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Order Summary -->
+                <div class="card border-0 sticky-top" style="background: var(--card-bg); top: 100px;">
+                    <div class="card-header" style="background: linear-gradient(135deg, var(--primary-gold) 0%, var(--muted-gold) 100%); color: var(--light-cream);">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calculator me-2"></i>Order Summary
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">${{ total|floatformat:2 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Shipping:</span>
+                            <span id="shipping">
+                                {% if total >= 50 %}
+                                    <span class="text-success">Free</span>
+                                {% else %}
+                                    $5.99
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Tax (estimated):</span>
+                            <span id="tax">${{ tax|floatformat:2 }}</span>
+                        </div>
+                        <hr style="border-color: var(--primary-gold);">
+                        <div class="d-flex justify-content-between mb-4">
+                            <strong>Total:</strong>
+                            <strong class="h5" style="color: var(--primary-gold);" id="final-total">
+                                ${{ final_total|floatformat:2 }}
+                            </strong>
+                        </div>
+                        
+                        {% if total >= 50 %}
+                        <div class="alert alert-success border-0" style="background: linear-gradient(135deg, var(--accent-beige) 0%, var(--light-cream) 100%);">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Free shipping applied!</strong>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info border-0" style="background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%);">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Add ${{ free_shipping_needed|floatformat:2 }} more for free shipping
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'skinly:checkout' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
+                            </a>
+                            <a href="{% url 'skinly:product_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recommended Products -->
+                <div class="card border-0 mt-4" style="background: var(--card-bg);">
+                    <div class="card-header" style="background: linear-gradient(135deg, var(--warm-brown) 0%, var(--dark-brown) 100%); color: var(--light-cream);">
+                        <h6 class="mb-0">
+                            <i class="fas fa-heart me-2"></i>You might also like
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <!-- This would be populated with recommended products -->
+                            <div class="col-6">
+                                <div class="card border-0" style="background: var(--accent-beige);">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="product-image-small d-flex align-items-center justify-content-center mb-2" style="height: 60px; background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%); border-radius: 5px;">
+                                            <i class="fas fa-image" style="color: var(--text-light);"></i>
+                                        </div>
+                                        <small class="text-muted">Sample Product</small>
+                                        <div class="small" style="color: var(--primary-gold);">$24.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card border-0" style="background: var(--accent-beige);">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="product-image-small d-flex align-items-center justify-content-center mb-2" style="height: 60px; background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%); border-radius: 5px;">
+                                            <i class="fas fa-image" style="color: var(--text-light);"></i>
+                                        </div>
+                                        <small class="text-muted">Sample Product</small>
+                                        <div class="small" style="color: var(--primary-gold);">$19.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Empty Cart -->
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart" style="font-size: 5rem; color: var(--text-light); margin-bottom: 2rem;"></i>
+            <h3 style="color: var(--dark-brown);">Your cart is empty</h3>
+            <p class="lead text-muted mb-4">Discover amazing beauty products and add them to your cart</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'skinly:product_list' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-palette me-2"></i>Start Shopping
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'skinly:wishlist' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-heart me-2"></i>View Wishlist
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Add CSRF token for AJAX requests -->
+{% csrf_token %}
+
+<style>
+.cart-item {
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.update-cart-form {
+    margin: 0;
+}
+
+.product-image {
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .product-image {
+    transform: scale(1.02);
+}
+
+.btn-outline-secondary {
+    border-color: var(--border-light);
+    color: var(--text-primary);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--primary-gold);
+    border-color: var(--primary-gold);
+    color: var(--light-cream);
+}
+
+.sticky-top {
+    position: sticky;
+    z-index: 1000;
+}
+
+@media (max-width: 991px) {
+    .sticky-top {
+        position: static;
+    }
+}
+</style>
+
+<script>
+// Update cart item quantity
+function updateCartItem(itemId) {
+    const quantityInput = document.getElementById(`quantity-${itemId}`);
+    const quantity = parseInt(quantityInput.value);
+    
+    if (quantity <= 0) {
+        removeCartItem(itemId);
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('quantity', quantity);
+    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    
+    fetch(`{% url 'skinly:update_cart_item' 0 %}`.replace('0', itemId), {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            updateItemTotal(itemId, quantity);
+            updateOrderSummary();
+        } else {
+            // Revert quantity on error
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        location.reload();
+    });
+}
+
+// Increase quantity
+function increaseQuantity(itemId) {
+    const quantityInput = document.getElementById(`quantity-${itemId}`);
+    const maxQuantity = parseInt(quantityInput.getAttribute('max'));
+    const currentQuantity = parseInt(quantityInput.value);
+    
+    if (currentQuantity < maxQuantity) {
+        quantityInput.value = currentQuantity + 1;
+        updateCartItem(itemId);
+    }
+}
+
+// Decrease quantity
+function decreaseQuantity(itemId) {
+    const quantityInput = document.getElementById(`quantity-${itemId}`);
+    const currentQuantity = parseInt(quantityInput.value);
+    
+    if (currentQuantity > 1) {
+        quantityInput.value = currentQuantity - 1;
+        updateCartItem(itemId);
+    } else {
+        removeCartItem(itemId);
+    }
+}
+
+// Remove cart item
+function removeCartItem(itemId) {
+    if (confirm('Are you sure you want to remove this item from your cart?')) {
+        fetch(`{% url 'skinly:remove_from_cart' 0 %}`.replace('0', itemId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                const cartItem = document.getElementById(`cart-item-${itemId}`);
+                cartItem.style.transition = 'all 0.3s ease';
+                cartItem.style.transform = 'scale(0.8)';
+                cartItem.style.opacity = '0';
+                
+                setTimeout(() => {
+                    cartItem.remove();
+                    updateOrderSummary();
+                    
+                    // Check if cart is empty
+                    const remainingItems = document.querySelectorAll('[id^="cart-item-"]');
+                    if (remainingItems.length === 0) {
+                        location.reload(); // Reload to show empty state
+                    }
+                }, 300);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error removing item from cart. Please try again.');
+        });
+    }
+}
+
+// Update item total display
+function updateItemTotal(itemId, quantity) {
+    const cartItem = document.getElementById(`cart-item-${itemId}`);
+    const priceElement = cartItem.querySelector('.price');
+    const totalElement = document.getElementById(`item-total-${itemId}`);
+    
+    if (priceElement && totalElement) {
+        const price = parseFloat(priceElement.textContent.replace('$', ''));
+        const total = (price * quantity).toFixed(2);
+        totalElement.textContent = `$${total}`;
+    }
+}
+
+// Update order summary
+function updateOrderSummary() {
+    let subtotal = 0;
+    
+    // Calculate new subtotal
+    document.querySelectorAll('[id^="item-total-"]').forEach(element => {
+        const amount = parseFloat(element.textContent.replace('$', ''));
+        subtotal += amount;
+    });
+    
+    // Update subtotal
+    document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+    
+    // Update shipping
+    const shippingElement = document.getElementById('shipping');
+    const shipping = subtotal >= 50 ? 0 : 5.99;
+    if (subtotal >= 50) {
+        shippingElement.innerHTML = '<span class="text-success">Free</span>';
+    } else {
+        shippingElement.textContent = '$5.99';
+    }
+    
+    // Update tax
+    const tax = subtotal * 0.08;
+    document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+    
+    // Update final total
+    const finalTotal = subtotal + shipping + tax;
+    document.getElementById('final-total').textContent = `$${finalTotal.toFixed(2)}`;
+    
+    // Update free shipping alert
+    updateShippingAlert(subtotal);
+}
+
+// Update shipping alert
+function updateShippingAlert(subtotal) {
+    const alertContainer = document.querySelector('.alert');
+    
+    if (subtotal >= 50) {
+        alertContainer.className = 'alert alert-success border-0';
+        alertContainer.style.background = 'linear-gradient(135deg, var(--accent-beige) 0%, var(--light-cream) 100%)';
+        alertContainer.innerHTML = '<i class="fas fa-check-circle me-2"></i><strong>Free shipping applied!</strong>';
+    } else {
+        const needed = (50 - subtotal).toFixed(2);
+        alertContainer.className = 'alert alert-info border-0';
+        alertContainer.style.background = 'linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%)';
+        alertContainer.innerHTML = `<i class="fas fa-info-circle me-2"></i>Add $${needed} more for free shipping`;
+    }
+}
+
+// Initialize quantity change listeners
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input[name="quantity"]').forEach(input => {
+        input.addEventListener('change', function() {
+            const itemId = this.id.split('-')[1];
+            updateCartItem(itemId);
+        });
+    });
+});
+</script>
+{% endblock %}
