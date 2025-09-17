@@ -470,10 +470,15 @@
                 <div class="col-md-4 mb-4">
                     <h5>Newsletter</h5>
                     <p>Get the latest beauty tips and product updates</p>
-                    <div class="input-group">
-                        <input type="email" class="form-control" placeholder="Your email">
-                        <button class="btn btn-primary" type="button">Subscribe</button>
-                    </div>
+                    <form method="post" action="{% url 'skinly:newsletter_subscribe' %}" id="newsletter-form">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="email" name="email" class="form-control" placeholder="Your email" required>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-envelope me-2"></i>Subscribe
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <hr class="my-4" style="border-color: var(--primary-gold);">

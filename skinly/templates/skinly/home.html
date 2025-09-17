@@ -1,4 +1,4 @@
-cart {% extends 'skinly/base.html' %}
+{% extends 'skinly/base.html' %}
 
 {% block title %}Skinly - Premium Makeup & Beauty{% endblock %}
 
@@ -277,12 +277,15 @@ cart {% extends 'skinly/base.html' %}
                 <p style="color: var(--light-cream);">Get the latest beauty tips, product launches, and exclusive offers delivered to your inbox.</p>
             </div>
             <div class="col-md-6">
-                <div class="input-group">
-                    <input type="email" class="form-control" placeholder="Enter your email address">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-envelope me-2"></i>Subscribe
-                    </button>
-                </div>
+                <form method="post" action="{% url 'skinly:newsletter_subscribe' %}" class="newsletter-form">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email address" required>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-envelope me-2"></i>Subscribe
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -112,17 +112,13 @@
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <span>Tax (estimated):</span>
-                            <span id="tax">${{ total|floatformat:2|add:"0"|mul:"0.08"|floatformat:2 }}</span>
+                            <span id="tax">${{ tax|floatformat:2 }}</span>
                         </div>
                         <hr style="border-color: var(--primary-gold);">
                         <div class="d-flex justify-content-between mb-4">
                             <strong>Total:</strong>
                             <strong class="h5" style="color: var(--primary-gold);" id="final-total">
-                                {% if total >= 50 %}
-                                    ${{ total|add:total|mul:0.08|floatformat:2 }}
-                                {% else %}
-                                    ${{ total|add:5.99|add:total|mul:0.08|floatformat:2 }}
-                                {% endif %}
+                                ${{ final_total|floatformat:2 }}
                             </strong>
                         </div>
                         
@@ -134,7 +130,7 @@
                         {% else %}
                         <div class="alert alert-info border-0" style="background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%);">
                             <i class="fas fa-info-circle me-2"></i>
-                            Add ${{ 50|sub:total|floatformat:2 }} more for free shipping
+                            Add ${{ free_shipping_needed|floatformat:2 }} more for free shipping
                         </div>
                         {% endif %}
                         
