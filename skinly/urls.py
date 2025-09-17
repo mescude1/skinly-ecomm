@@ -35,6 +35,13 @@ urlpatterns = [
     # Profile
     path('profile/', views.profile_view, name='profile'),
     
+    # Contact
+    path('contact/', views.contact_view, name='contact'),
+    
+    # FAQ Pages
+    path('shipping/', views.shipping_info_view, name='shipping_info'),
+    path('returns/', views.returns_view, name='returns'),
+    
     # Authentication
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

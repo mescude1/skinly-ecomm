@@ -140,6 +140,8 @@ def add_to_cart(request, product_id):
     
     if product.stock_quantity < quantity:
         messages.error(request, 'Not enough stock available')
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': 'Not enough stock available'})
         return redirect('product_detail', product_id=product_id)
     
     cart, created = Cart.objects.get_or_create(user=request.user)
@@ -154,6 +156,10 @@ def add_to_cart(request, product_id):
         cart_item.save()
     
     messages.success(request, f'{product.name} added to cart')
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'message': f'{product.name} added to cart'})
+    
     return redirect('cart')
 
 @login_required
@@ -388,3 +394,15 @@ def search_products(request):
         })
     
     return JsonResponse({'products': product_data})
+
+def contact_view(request):
+    """Contact us page with company information"""
+    return render(request, 'skinly/contact.html')
+
+def shipping_info_view(request):
+    """Shipping information FAQ page"""
+    return render(request, 'skinly/shipping_info.html')
+
+def returns_view(request):
+    """Returns policy FAQ page"""
+    return render(request, 'skinly/returns.html')
