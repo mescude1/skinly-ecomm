@@ -1,0 +1,264 @@
+{% extends 'skinly/base.html' %}
+
+{% block title %}Returns & Exchanges - Skinly{% endblock %}
+
+{% block content %}
+<!-- Returns Hero Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--light-cream) 0%, var(--primary-sand) 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Returns & Exchanges</h1>
+                <p class="lead" style="color: var(--warm-brown);">We want you to love your purchase. If you're not completely satisfied, we're here to help.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-undo-alt" style="font-size: 5rem; color: var(--primary-gold); opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Return Policy Overview -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- 30-Day Return -->
+            <div class="col-md-4">
+                <div class="card border-0 h-100 text-center" style="background: var(--accent-beige);">
+                    <div class="card-body p-4">
+                        <div class="return-icon mb-3" style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-calendar-alt" style="color: var(--light-cream); font-size: 2rem;"></i>
+                        </div>
+                        <h4 class="card-title" style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">30-Day Window</h4>
+                        <p class="card-text" style="color: var(--warm-brown);">
+                            You have 30 days from delivery to return items for a full refund or exchange. Items must be unused and in original packaging.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Returns -->
+            <div class="col-md-4">
+                <div class="card border-0 h-100 text-center" style="background: var(--accent-beige);">
+                    <div class="card-body p-4">
+                        <div class="return-icon mb-3" style="width: 80px; height: 80px; background: var(--warm-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-gift" style="color: var(--light-cream); font-size: 2rem;"></i>
+                        </div>
+                        <h4 class="card-title" style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">Free Returns</h4>
+                        <p class="card-text" style="color: var(--warm-brown);">
+                            All returns are free within Colombia. We'll email you a prepaid return label to make the process as easy as possible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Easy Process -->
+            <div class="col-md-4">
+                <div class="card border-0 h-100 text-center" style="background: var(--accent-beige);">
+                    <div class="card-body p-4">
+                        <div class="return-icon mb-3" style="width: 80px; height: 80px; background: var(--muted-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-thumbs-up" style="color: var(--light-cream); font-size: 2rem;"></i>
+                        </div>
+                        <h4 class="card-title" style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">Simple Process</h4>
+                        <p class="card-text" style="color: var(--warm-brown);">
+                            Start your return online in just a few clicks. No lengthy forms or complicated procedures - we keep it simple.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Return Steps -->
+<section class="py-5" style="background: var(--light-cream);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">How to Return an Item</h2>
+            <p class="lead text-muted">Follow these simple steps to return or exchange your purchase</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="step-item text-center">
+                    <div class="step-number mb-3" style="width: 60px; height: 60px; background: var(--primary-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: var(--light-cream); font-size: 1.5rem; font-weight: bold;">1</div>
+                    <h5 style="color: var(--text-primary);">Start Return</h5>
+                    <p class="text-muted">Log into your account and select "Return Item" from your order history, or contact our support team.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-item text-center">
+                    <div class="step-number mb-3" style="width: 60px; height: 60px; background: var(--warm-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: var(--light-cream); font-size: 1.5rem; font-weight: bold;">2</div>
+                    <h5 style="color: var(--text-primary);">Get Return Label</h5>
+                    <p class="text-muted">We'll email you a prepaid return shipping label within 24 hours. Print it out and attach to your package.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-item text-center">
+                    <div class="step-number mb-3" style="width: 60px; height: 60px; background: var(--muted-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: var(--light-cream); font-size: 1.5rem; font-weight: bold;">3</div>
+                    <h5 style="color: var(--text-primary);">Pack & Ship</h5>
+                    <p class="text-muted">Pack items in original packaging (or any secure box) and drop off at any authorized shipping location.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-item text-center">
+                    <div class="step-number mb-3" style="width: 60px; height: 60px; background: var(--dark-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: var(--light-cream); font-size: 1.5rem; font-weight: bold;">4</div>
+                    <h5 style="color: var(--text-primary);">Get Refund</h5>
+                    <p class="text-muted">Once we receive your return, we'll process your refund within 3-5 business days to your original payment method.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Returns FAQ -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Returns FAQ</h2>
+            <p class="lead text-muted">Common questions about our return and exchange policy</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="accordion" id="returnsFAQ">
+                    <!-- FAQ Item 1 -->
+                    <div class="accordion-item border-0 mb-3" style="background: var(--card-bg); border-radius: 15px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" style="background: var(--primary-sand); color: var(--dark-brown); font-weight: 600;">
+                                What items can be returned?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#returnsFAQ">
+                            <div class="accordion-body" style="color: var(--text-primary);">
+                                Most items can be returned within 30 days as long as they're unused and in original packaging. For hygiene reasons, we cannot accept returns on opened mascara, lip products, or liquid foundation unless they arrive damaged or defective.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="accordion-item border-0 mb-3" style="background: var(--card-bg); border-radius: 15px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" style="background: var(--primary-sand); color: var(--dark-brown); font-weight: 600;">
+                                How long do refunds take?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+                            <div class="accordion-body" style="color: var(--text-primary);">
+                                Once we receive your return, we'll process your refund within 3-5 business days. Depending on your bank or payment provider, it may take an additional 3-5 business days for the refund to appear in your account.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="accordion-item border-0 mb-3" style="background: var(--card-bg); border-radius: 15px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" style="background: var(--primary-sand); color: var(--dark-brown); font-weight: 600;">
+                                Can I exchange an item for a different shade?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+                            <div class="accordion-body" style="color: var(--text-primary);">
+                                Yes! We offer free exchanges for different shades or sizes within 30 days. Simply select "Exchange" when starting your return and choose your preferred replacement. We'll ship the new item as soon as we receive your return.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="accordion-item border-0 mb-3" style="background: var(--card-bg); border-radius: 15px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" style="background: var(--primary-sand); color: var(--dark-brown); font-weight: 600;">
+                                What if I received a damaged item?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+                            <div class="accordion-body" style="color: var(--text-primary);">
+                                If you receive a damaged or defective item, please contact us immediately at <a href="mailto:support@skinly.co" style="color: var(--primary-gold);">support@skinly.co</a> with photos of the damage. We'll arrange for an immediate replacement or full refund, and you won't need to return the damaged item.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 5 -->
+                    <div class="accordion-item border-0 mb-3" style="background: var(--card-bg); border-radius: 15px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" style="background: var(--primary-sand); color: var(--dark-brown); font-weight: 600;">
+                                Can I return a gift?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+                            <div class="accordion-body" style="color: var(--text-primary);">
+                                Yes, gifts can be returned within 30 days of delivery. If you don't have the original order information, you can still return the item for store credit. Gift returns follow the same policy as regular returns.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 6 -->
+                    <div class="accordion-item border-0 mb-3" style="background: var(--card-bg); border-radius: 15px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" style="background: var(--primary-sand); color: var(--dark-brown); font-weight: 600;">
+                                Do you offer store credit instead of refunds?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#returnsFAQ">
+                            <div class="accordion-body" style="color: var(--text-primary);">
+                                Yes! You can choose to receive store credit instead of a refund to your original payment method. Store credit never expires and can be used on any future purchase. You'll receive a 10% bonus when you choose store credit over a refund.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-5" style="background: var(--accent-beige);">
+    <div class="container text-center">
+        <h3 style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">Need help with a return?</h3>
+        <p style="color: var(--warm-brown);">Our customer service team is ready to assist you with returns and exchanges.</p>
+        <div class="mt-4">
+            <a href="{% url 'skinly:contact' %}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-envelope me-2"></i>Contact Us
+            </a>
+            <a href="mailto:support@skinly.co" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-at me-2"></i>Email Support
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+.return-icon {
+    transition: all 0.3s ease;
+}
+
+.card:hover .return-icon {
+    transform: scale(1.1);
+}
+
+.step-number {
+    transition: all 0.3s ease;
+}
+
+.step-item:hover .step-number {
+    transform: scale(1.1);
+}
+
+.step-item {
+    transition: all 0.3s ease;
+}
+
+.step-item:hover {
+    transform: translateY(-5px);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--primary-gold) !important;
+    color: var(--dark-brown) !important;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+</style>
+{% endblock %}
