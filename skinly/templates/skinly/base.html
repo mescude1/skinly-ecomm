@@ -381,6 +381,11 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'skinly:order_list' %}">
+                            <i class="fas fa-shopping-bag me-1"></i>Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link position-relative" href="{% url 'skinly:wishlist' %}">
                             <i class="fas fa-heart me-1"></i>Wishlist
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background: var(--primary-gold); color: var(--dark-brown);" id="wishlist-count">
