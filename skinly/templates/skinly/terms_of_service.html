@@ -1,0 +1,240 @@
+{% extends 'skinly/base.html' %}
+{% load static %}
+
+{% block title %}Terms of Service - Skinly{% endblock %}
+
+{% block extra_css %}
+<style>
+    .legal-content {
+        background: white;
+        border-radius: 15px;
+        padding: 3rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin: 2rem 0;
+        line-height: 1.8;
+    }
+    
+    .legal-content h1 {
+        color: var(--primary-brown);
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 1.5rem;
+        border-bottom: 3px solid var(--primary-gold);
+        padding-bottom: 1rem;
+    }
+    
+    .legal-content h2 {
+        color: var(--primary-brown);
+        font-size: 1.5rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .legal-content h3 {
+        color: var(--muted-gold);
+        font-size: 1.25rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .legal-content p {
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+    
+    .legal-content ul {
+        margin-bottom: 1rem;
+        padding-left: 2rem;
+    }
+    
+    .legal-content li {
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+    
+    .effective-date {
+        background: var(--primary-sand);
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 4px solid var(--primary-gold);
+        margin-bottom: 2rem;
+        font-weight: 500;
+    }
+    
+    .contact-info {
+        background: var(--accent-beige);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+        border: 1px solid var(--primary-gold);
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 1rem 0;
+    }
+    
+    .breadcrumb-item a {
+        color: var(--muted-gold);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--text-primary);
+    }
+    
+    .warning-box {
+        background: linear-gradient(135deg, #FFF3CD, #FCF4A3);
+        border: 1px solid var(--primary-gold);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'skinly:home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Terms of Service</li>
+        </ol>
+    </nav>
+    
+    <div class="legal-content">
+        <h1><i class="fas fa-gavel me-3"></i>Terms of Service</h1>
+        
+        <div class="effective-date">
+            <strong>Effective Date:</strong> January 1, 2025<br>
+            <strong>Last Updated:</strong> January 1, 2025
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Important:</strong> Please read these Terms of Service carefully before using our website and services. By accessing or using Skinly, you agree to be bound by these terms.
+        </div>
+
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing and using the Skinly website ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+
+        <h2>2. Description of Service</h2>
+        <p>Skinly is an e-commerce platform that offers premium makeup and beauty products. Our services include:</p>
+        <ul>
+            <li>Online catalog of beauty and makeup products</li>
+            <li>Personalized product recommendations</li>
+            <li>Secure online shopping and payment processing</li>
+            <li>Customer account management</li>
+            <li>Order tracking and customer support</li>
+        </ul>
+
+        <h2>3. User Accounts</h2>
+        
+        <h3>3.1 Account Creation</h3>
+        <p>To use certain features of our Service, you must create an account. You agree to:</p>
+        <ul>
+            <li>Provide accurate, current, and complete information</li>
+            <li>Maintain and update your account information</li>
+            <li>Keep your password secure and confidential</li>
+            <li>Be responsible for all activities under your account</li>
+            <li>Notify us immediately of any unauthorized use</li>
+        </ul>
+
+        <h3>3.2 Account Termination</h3>
+        <p>We reserve the right to terminate or suspend accounts that violate these terms or engage in fraudulent activities.</p>
+
+        <h2>4. Purchases and Payments</h2>
+        
+        <h3>4.1 Product Information</h3>
+        <p>We strive to provide accurate product descriptions, prices, and availability. However, we reserve the right to correct errors and update information without prior notice.</p>
+
+        <h3>4.2 Pricing</h3>
+        <p>All prices are displayed in USD and are subject to change. Prices include applicable taxes where required by law. Shipping costs are calculated separately at checkout.</p>
+
+        <h3>4.3 Payment Terms</h3>
+        <ul>
+            <li>Payment is required at the time of purchase</li>
+            <li>We accept major credit cards and approved payment methods</li>
+            <li>All transactions are processed securely through third-party payment processors</li>
+            <li>We reserve the right to refuse or cancel orders for any reason</li>
+        </ul>
+
+        <h2>5. Shipping and Delivery</h2>
+        <p>We will make reasonable efforts to deliver products within the estimated timeframes. However, delivery dates are estimates and not guarantees. We are not liable for delays caused by shipping carriers or circumstances beyond our control.</p>
+
+        <h2>6. Returns and Refunds</h2>
+        <p>Please refer to our <a href="{% url 'skinly:returns' %}" style="color: var(--primary-gold);">Returns Policy</a> for detailed information about returns, exchanges, and refunds. In general:</p>
+        <ul>
+            <li>Items must be returned within 30 days of purchase</li>
+            <li>Products must be unused and in original packaging</li>
+            <li>Certain items may be non-returnable for hygiene reasons</li>
+            <li>Return shipping costs may apply</li>
+        </ul>
+
+        <h2>7. User Conduct</h2>
+        <p>You agree not to:</p>
+        <ul>
+            <li>Use the Service for any unlawful purpose</li>
+            <li>Violate any local, state, national, or international law</li>
+            <li>Transmit malicious code or viruses</li>
+            <li>Attempt to gain unauthorized access to our systems</li>
+            <li>Interfere with or disrupt the Service</li>
+            <li>Impersonate another person or entity</li>
+            <li>Collect or store personal data about other users</li>
+        </ul>
+
+        <h2>8. Intellectual Property</h2>
+        
+        <h3>8.1 Our Content</h3>
+        <p>All content on our website, including text, graphics, logos, images, and software, is our property or licensed to us and is protected by copyright, trademark, and other intellectual property laws.</p>
+
+        <h3>8.2 User Content</h3>
+        <p>By submitting reviews, comments, or other content, you grant us a non-exclusive, royalty-free license to use, reproduce, and display such content in connection with our Service.</p>
+
+        <h2>9. Privacy</h2>
+        <p>Your privacy is important to us. Please review our <a href="{% url 'skinly:privacy_policy' %}" style="color: var(--primary-gold);">Privacy Policy</a> to understand how we collect, use, and protect your information.</p>
+
+        <h2>10. Disclaimers</h2>
+        
+        <h3>10.1 Product Results</h3>
+        <p>Individual results from using our products may vary. We make no guarantees about the effectiveness or suitability of our products for any particular individual.</p>
+
+        <h3>10.2 Service Availability</h3>
+        <p>We strive to maintain continuous service availability but do not guarantee uninterrupted access. We may suspend or modify the Service for maintenance or updates.</p>
+
+        <h2>11. Limitation of Liability</h2>
+        <p>To the fullest extent permitted by law, Skinly shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.</p>
+
+        <h2>12. Indemnification</h2>
+        <p>You agree to defend, indemnify, and hold harmless Skinly and its officers, directors, employees, and agents from any claims, damages, or expenses arising from your use of the Service or violation of these terms.</p>
+
+        <h2>13. Governing Law</h2>
+        <p>These terms shall be governed by and construed in accordance with the laws of Colombia, without regard to its conflict of law provisions. Any disputes arising from these terms shall be resolved in the courts of Medellín, Colombia.</p>
+
+        <h2>14. Severability</h2>
+        <p>If any provision of these terms is held to be invalid or unenforceable, the remaining provisions will remain in full force and effect.</p>
+
+        <h2>15. Changes to Terms</h2>
+        <p>We reserve the right to modify these terms at any time. We will notify users of material changes by posting the updated terms on our website. Your continued use of the Service after such changes constitutes acceptance of the new terms.</p>
+
+        <h2>16. Contact Information</h2>
+        <div class="contact-info">
+            <h3>Questions About These Terms?</h3>
+            <p>If you have any questions about these Terms of Service, please contact us:</p>
+            <ul class="list-unstyled">
+                <li><i class="fas fa-envelope me-2"></i><strong>Email:</strong> legal@skinly.com</li>
+                <li><i class="fas fa-phone me-2"></i><strong>Phone:</strong> +57 4 123-4567</li>
+                <li><i class="fas fa-map-marker-alt me-2"></i><strong>Address:</strong> Calle 10 #32-15, El Poblado, Medellín, Colombia</li>
+                <li><i class="fas fa-clock me-2"></i><strong>Business Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM (COT)</li>
+            </ul>
+        </div>
+
+        <div class="warning-box mt-4">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Last Updated:</strong> These terms were last updated on January 1, 2025. We recommend checking this page periodically for any changes.
+        </div>
+    </div>
+</div>
+{% endblock %}
