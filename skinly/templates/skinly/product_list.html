@@ -1,0 +1,472 @@
+{% extends 'skinly/base.html' %}
+
+{% block title %}Products - Skinly{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-4" style="background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-6 fw-bold mb-2" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">
+                    <i class="fas fa-palette me-3"></i>Our Products
+                </h1>
+                <p class="lead text-muted mb-0">Discover premium makeup and beauty products curated just for you</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-md-end mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'skinly:home' %}" style="color: var(--text-secondary);">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color: var(--primary-gold);">Products</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filters and Search -->
+<section class="py-4" style="background: var(--card-bg); border-bottom: 1px solid var(--border-light);">
+    <div class="container">
+        <form method="GET" class="row g-3 align-items-end">
+            <!-- Search -->
+            <div class="col-md-3">
+                <label for="search" class="form-label fw-semibold" style="color: var(--text-primary);">Search</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search" name="q" value="{{ query }}" placeholder="Search products...">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Brand Filter -->
+            <div class="col-md-2">
+                <label for="brand" class="form-label fw-semibold" style="color: var(--text-primary);">Brand</label>
+                <select class="form-select" id="brand" name="brand">
+                    <option value="">All Brands</option>
+                    {% for brand in brands %}
+                    <option value="{{ brand.id }}" {% if current_filters.brand == brand.id|stringformat:"s" %}selected{% endif %}>
+                        {{ brand.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Product Type Filter -->
+            <div class="col-md-2">
+                <label for="product_type" class="form-label fw-semibold" style="color: var(--text-primary);">Type</label>
+                <select class="form-select" id="product_type" name="product_type">
+                    <option value="">All Types</option>
+                    {% for type_code, type_name in product_types %}
+                    <option value="{{ type_code }}" {% if current_filters.product_type == type_code %}selected{% endif %}>
+                        {{ type_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Skin Type Filter -->
+            <div class="col-md-2">
+                <label for="skin_type" class="form-label fw-semibold" style="color: var(--text-primary);">Skin Type</label>
+                <select class="form-select" id="skin_type" name="skin_type">
+                    <option value="">All Skin Types</option>
+                    {% for skin_code, skin_name in skin_types %}
+                    <option value="{{ skin_code }}" {% if current_filters.skin_type == skin_code %}selected{% endif %}>
+                        {{ skin_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Price Range -->
+            <div class="col-md-1">
+                <label for="min_price" class="form-label fw-semibold" style="color: var(--text-primary);">Min $</label>
+                <input type="number" class="form-control" id="min_price" name="min_price" value="{{ current_filters.min_price }}" placeholder="0" step="0.01">
+            </div>
+            
+            <div class="col-md-1">
+                <label for="max_price" class="form-label fw-semibold" style="color: var(--text-primary);">Max $</label>
+                <input type="number" class="form-control" id="max_price" name="max_price" value="{{ current_filters.max_price }}" placeholder="999" step="0.01">
+            </div>
+            
+            <!-- Filter Actions -->
+            <div class="col-md-1">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <a href="{% url 'skinly:product_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+        
+        <!-- Active Filters Display -->
+        {% if query or current_filters.brand or current_filters.product_type or current_filters.skin_type or current_filters.min_price or current_filters.max_price %}
+        <div class="mt-3">
+            <span class="fw-semibold me-2" style="color: var(--text-primary);">Active filters:</span>
+            {% if query %}
+            <span class="badge me-2" style="background: var(--primary-gold); color: var(--dark-brown);">
+                Search: "{{ query }}"
+                <a href="?{% if current_filters.brand %}brand={{ current_filters.brand }}&{% endif %}{% if current_filters.product_type %}product_type={{ current_filters.product_type }}&{% endif %}{% if current_filters.skin_type %}skin_type={{ current_filters.skin_type }}&{% endif %}{% if current_filters.min_price %}min_price={{ current_filters.min_price }}&{% endif %}{% if current_filters.max_price %}max_price={{ current_filters.max_price }}{% endif %}" 
+                   style="color: var(--dark-brown); text-decoration: none; margin-left: 5px;">×</a>
+            </span>
+            {% endif %}
+            {% if current_filters.brand %}
+            <span class="badge me-2" style="background: var(--warm-brown); color: var(--light-cream);">
+                Brand: {% for brand in brands %}{% if brand.id|stringformat:"s" == current_filters.brand %}{{ brand.name }}{% endif %}{% endfor %}
+                <a href="?{% if query %}q={{ query }}&{% endif %}{% if current_filters.product_type %}product_type={{ current_filters.product_type }}&{% endif %}{% if current_filters.skin_type %}skin_type={{ current_filters.skin_type }}&{% endif %}{% if current_filters.min_price %}min_price={{ current_filters.min_price }}&{% endif %}{% if current_filters.max_price %}max_price={{ current_filters.max_price }}{% endif %}" 
+                   style="color: var(--light-cream); text-decoration: none; margin-left: 5px;">×</a>
+            </span>
+            {% endif %}
+            <!-- Add similar badges for other filters -->
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Products Grid -->
+<section class="py-5">
+    <div class="container">
+        <!-- Results Info -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p class="text-muted mb-0">
+                    {% if page_obj.paginator.count > 0 %}
+                        Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} products
+                    {% else %}
+                        No products found
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="btn-group" role="group" aria-label="View options">
+                    <button type="button" class="btn btn-outline-primary active" id="gridView">
+                        <i class="fas fa-th"></i> Grid
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" id="listView">
+                        <i class="fas fa-list"></i> List
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        {% if page_obj.object_list %}
+        <!-- Products Grid -->
+        <div class="row g-4" id="productsContainer">
+            {% for product in page_obj.object_list %}
+            <div class="col-lg-3 col-md-4 col-sm-6 product-item">
+                <div class="card product-card h-100">
+                    <div class="position-relative">
+                        <div class="product-image card-img-top d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="fas fa-image" style="font-size: 3rem; color: var(--text-light);"></i>
+                        </div>
+                        
+                        <!-- Stock Badge -->
+                        {% if product.stock_quantity <= 5 %}
+                        <span class="badge position-absolute top-0 start-0 m-2" style="background: #dc3545;">
+                            {% if product.stock_quantity == 0 %}Out of Stock{% else %}Only {{ product.stock_quantity }} left{% endif %}
+                        </span>
+                        {% endif %}
+                        
+                        <!-- Wishlist Button -->
+                        {% if user.is_authenticated %}
+                        <button class="btn btn-link position-absolute top-0 end-0 m-2 text-danger" 
+                                id="wishlist-{{ product.id }}" 
+                                onclick="toggleWishlist({{ product.id }})"
+                                style="background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px;">
+                            <i class="{% if product in user.wishlist.all %}fas{% else %}far{% endif %} fa-heart"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <h6 class="card-title mb-1">{{ product.name }}</h6>
+                            <p class="text-muted small mb-1">{{ product.brand.name }}</p>
+                            <p class="text-muted small mb-2">{{ product.get_product_type_display }} • {{ product.get_finish_type_display }}</p>
+                        </div>
+                        
+                        <!-- Rating -->
+                        <div class="mb-2">
+                            <div class="rating d-flex align-items-center">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="text-muted small ms-1">({{ product.rating }})</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Price and Actions -->
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="price fw-bold" style="color: var(--primary-gold); font-size: 1.25rem;">${{ product.price }}</span>
+                                {% if product.skin_type_compatibility %}
+                                <span class="badge" style="background: var(--accent-beige); color: var(--text-primary);">
+                                    {{ product.get_skin_type_compatibility_display }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'skinly:product_detail' product.id %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                                {% if product.stock_quantity > 0 and user.is_authenticated %}
+                                <form method="POST" action="{% url 'skinly:add_to_cart' product.id %}" class="d-grid">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-shopping-cart me-1"></i>Add to Cart
+                                    </button>
+                                </form>
+                                {% elif not user.is_authenticated %}
+                                <a href="{% url 'skinly:login' %}" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login to Purchase
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Products pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if current_filters.brand %}brand={{ current_filters.brand }}&{% endif %}{% if current_filters.product_type %}product_type={{ current_filters.product_type }}&{% endif %}{% if current_filters.skin_type %}skin_type={{ current_filters.skin_type }}&{% endif %}{% if current_filters.min_price %}min_price={{ current_filters.min_price }}&{% endif %}{% if current_filters.max_price %}max_price={{ current_filters.max_price }}&{% endif %}page={{ page_obj.previous_page_number }}" 
+                       style="color: var(--primary-gold); border-color: var(--border-light);">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link" style="background: var(--primary-gold); border-color: var(--primary-gold); color: var(--dark-brown);">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if current_filters.brand %}brand={{ current_filters.brand }}&{% endif %}{% if current_filters.product_type %}product_type={{ current_filters.product_type }}&{% endif %}{% if current_filters.skin_type %}skin_type={{ current_filters.skin_type }}&{% endif %}{% if current_filters.min_price %}min_price={{ current_filters.min_price }}&{% endif %}{% if current_filters.max_price %}max_price={{ current_filters.max_price }}&{% endif %}page={{ num }}" 
+                           style="color: var(--primary-gold); border-color: var(--border-light);">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if current_filters.brand %}brand={{ current_filters.brand }}&{% endif %}{% if current_filters.product_type %}product_type={{ current_filters.product_type }}&{% endif %}{% if current_filters.skin_type %}skin_type={{ current_filters.skin_type }}&{% endif %}{% if current_filters.min_price %}min_price={{ current_filters.min_price }}&{% endif %}{% if current_filters.max_price %}max_price={{ current_filters.max_price }}&{% endif %}page={{ page_obj.next_page_number }}" 
+                       style="color: var(--primary-gold); border-color: var(--border-light);">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <!-- No Products Found -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-search" style="font-size: 4rem; color: var(--text-light);"></i>
+            </div>
+            <h4 style="color: var(--text-primary);">No products found</h4>
+            <p class="text-muted mb-4">Try adjusting your search criteria or browse our categories</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'skinly:product_list' %}" class="btn btn-primary">
+                    <i class="fas fa-th-large me-2"></i>View All Products
+                </a>
+                <a href="{% url 'skinly:home' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-home me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Quick View Modal (placeholder for future enhancement) -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border: none; border-radius: 15px;">
+            <div class="modal-header" style="background: var(--primary-sand); border-bottom: 2px solid var(--primary-gold);">
+                <h5 class="modal-title" id="quickViewModalLabel" style="color: var(--text-primary);">Quick View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="quickViewContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add CSRF token for AJAX requests -->
+{% csrf_token %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.product-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-light);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(139, 105, 20, 0.15);
+}
+
+.product-image {
+    background: linear-gradient(135deg, var(--accent-beige) 0%, var(--primary-sand) 100%);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.price {
+    font-family: 'Playfair Display', serif;
+}
+
+.page-link:hover {
+    background: var(--primary-sand);
+    border-color: var(--primary-gold);
+    color: var(--text-primary);
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
+
+/* List view styles */
+.list-view .product-item {
+    width: 100%;
+}
+
+.list-view .product-card {
+    flex-direction: row;
+}
+
+.list-view .product-image {
+    width: 200px;
+    height: 150px;
+    flex-shrink: 0;
+}
+
+.list-view .card-body {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .list-view .product-card {
+        flex-direction: column;
+    }
+    
+    .list-view .product-image {
+        width: 100%;
+        height: 200px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// View toggle functionality
+document.getElementById('gridView').addEventListener('click', function() {
+    document.getElementById('productsContainer').classList.remove('list-view');
+    this.classList.add('active');
+    document.getElementById('listView').classList.remove('active');
+});
+
+document.getElementById('listView').addEventListener('click', function() {
+    document.getElementById('productsContainer').classList.add('list-view');
+    this.classList.add('active');
+    document.getElementById('gridView').classList.remove('active');
+});
+
+// Auto-submit form on filter change
+document.querySelectorAll('select[name="brand"], select[name="product_type"], select[name="skin_type"]').forEach(select => {
+    select.addEventListener('change', function() {
+        this.form.submit();
+    });
+});
+
+// Price range validation
+document.getElementById('min_price').addEventListener('change', function() {
+    const maxPrice = document.getElementById('max_price');
+    if (this.value && maxPrice.value && parseFloat(this.value) > parseFloat(maxPrice.value)) {
+        maxPrice.value = this.value;
+    }
+});
+
+document.getElementById('max_price').addEventListener('change', function() {
+    const minPrice = document.getElementById('min_price');
+    if (this.value && minPrice.value && parseFloat(this.value) < parseFloat(minPrice.value)) {
+        minPrice.value = this.value;
+    }
+});
+
+// Quick add to cart functionality
+document.querySelectorAll('form[action*="add-to-cart"]').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const button = this.querySelector('button[type="submit"]');
+        const originalText = button.innerHTML;
+        
+        button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Adding...';
+        button.disabled = true;
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+        })
+        .then(response => {
+            if (response.redirected) {
+                // Success - show feedback and reset button
+                button.innerHTML = '<i class="fas fa-check me-1"></i>Added!';
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-outline-primary');
+                    button.disabled = false;
+                }, 2000);
+                
+                // Update cart count if exists
+                // updateCartCount();
+            } else {
+                throw new Error('Failed to add to cart');
+            }
+        })
+        .catch(error => {
+            button.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>Error';
+            button.classList.add('btn-danger');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('btn-danger');
+                button.disabled = false;
+            }, 2000);
+        });
+    });
+});
+</script>
+{% endblock %}

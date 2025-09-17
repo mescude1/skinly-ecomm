@@ -1,0 +1,349 @@
+{% extends 'skinly/base.html' %}
+
+{% block title %}Skinly - Premium Makeup & Beauty{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title slide-up">Discover Your Perfect Look</h1>
+                <p class="hero-subtitle slide-up">Premium makeup curated for your unique beauty. Get personalized recommendations based on your skin tone, type, and style preferences.</p>
+                
+                <!-- Search Bar -->
+                <div class="row slide-up">
+                    <div class="col-md-8">
+                        <div class="input-group mb-3">
+                            <input type="text" id="searchInput" class="form-control search-bar" placeholder="Search for products, brands, or categories..." onkeypress="if(event.key==='Enter') performSearch()">
+                            <button class="btn btn-primary" type="button" onclick="performSearch()">
+                                <i class="fas fa-search me-2"></i>Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CTA Buttons -->
+                <div class="slide-up">
+                    <a href="{% url 'skinly:product_list' %}" class="btn btn-primary btn-lg me-3 mb-2">
+                        <i class="fas fa-palette me-2"></i>Shop Now
+                    </a>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'skinly:login' %}" class="btn btn-outline-primary btn-lg mb-2">
+                        <i class="fas fa-user-plus me-2"></i>Get Personalized
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="position-relative">
+                    <div style="width: 400px; height: 400px; background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 40px var(--shadow-color);">
+                        <i class="fas fa-palette" style="font-size: 8rem; color: var(--primary-gold); opacity: 0.8;"></i>
+                    </div>
+                    <!-- Floating elements -->
+                    <div style="position: absolute; top: 10%; left: 10%; width: 60px; height: 60px; background: var(--primary-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite;">
+                        <i class="fas fa-lipstick" style="color: var(--light-cream);"></i>
+                    </div>
+                    <div style="position: absolute; top: 20%; right: 15%; width: 50px; height: 50px; background: var(--warm-brown); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite 1s;">
+                        <i class="fas fa-eye" style="color: var(--light-cream);"></i>
+                    </div>
+                    <div style="position: absolute; bottom: 15%; left: 20%; width: 55px; height: 55px; background: var(--muted-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: float 3s ease-in-out infinite 2s;">
+                        <i class="fas fa-brush" style="color: var(--light-cream);"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Shop by Category</h2>
+            <p class="lead text-muted">Explore our curated collection of premium beauty products</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <a href="{% url 'skinly:product_list' %}?product_type=FOUNDATION" class="text-decoration-none">
+                    <div class="card category-card h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="category-icon mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-gold) 0%, var(--muted-gold) 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-circle" style="color: var(--light-cream); font-size: 2rem;"></i>
+                            </div>
+                            <h5 class="card-title" style="color: var(--text-primary);">Foundation</h5>
+                            <p class="card-text text-muted">Perfect base for every skin tone</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'skinly:product_list' %}?product_type=LIPSTICK" class="text-decoration-none">
+                    <div class="card category-card h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="category-icon mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--warm-brown) 0%, var(--dark-brown) 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-lipstick" style="color: var(--light-cream); font-size: 2rem;"></i>
+                            </div>
+                            <h5 class="card-title" style="color: var(--text-primary);">Lipstick</h5>
+                            <p class="card-text text-muted">Bold colors for every occasion</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'skinly:product_list' %}?product_type=EYESHADOW" class="text-decoration-none">
+                    <div class="card category-card h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="category-icon mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-sand) 0%, var(--primary-gold) 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-eye" style="color: var(--dark-brown); font-size: 2rem;"></i>
+                            </div>
+                            <h5 class="card-title" style="color: var(--text-primary);">Eyeshadow</h5>
+                            <p class="card-text text-muted">Create stunning eye looks</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5" style="background: var(--accent-beige);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Featured Products</h2>
+            <p class="lead text-muted">Handpicked favorites from our collection</p>
+        </div>
+        
+        {% if featured_products %}
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-md-3 col-sm-6">
+                <div class="card product-card">
+                    <div class="position-relative">
+                        <div class="product-image card-img-top d-flex align-items-center justify-content-center">
+                            <i class="fas fa-image" style="font-size: 3rem; color: var(--text-light);"></i>
+                        </div>
+                        {% if user.is_authenticated %}
+                        <button class="btn btn-link position-absolute top-0 end-0 m-2 text-danger" 
+                                id="wishlist-{{ product.id }}" 
+                                onclick="toggleWishlist({{ product.id }})"
+                                style="background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px;">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title mb-1">{{ product.name }}</h6>
+                        <p class="text-muted small mb-2">{{ product.brand.name }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price">${{ product.price }}</span>
+                            <div class="rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <a href="{% url 'skinly:product_detail' product.id %}" class="btn btn-primary btn-sm w-100 mt-2">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-palette" style="font-size: 4rem; color: var(--text-light); margin-bottom: 1rem;"></i>
+            <h4>No products available yet</h4>
+            <p class="text-muted">Check back soon for amazing makeup products!</p>
+        </div>
+        {% endif %}
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'skinly:product_list' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-th-large me-2"></i>View All Products
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Personalized Recommendations -->
+{% if user.is_authenticated and recommendations %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Recommended for You</h2>
+            <p class="lead text-muted">Based on your preferences and skin profile</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for product in recommendations %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card product-card">
+                    <div class="position-relative">
+                        <div class="product-image card-img-top d-flex align-items-center justify-content-center">
+                            <i class="fas fa-image" style="font-size: 3rem; color: var(--text-light);"></i>
+                        </div>
+                        <span class="badge position-absolute top-0 start-0 m-2" style="background: var(--primary-gold);">
+                            <i class="fas fa-star me-1"></i>Recommended
+                        </span>
+                        <button class="btn btn-link position-absolute top-0 end-0 m-2 text-danger" 
+                                id="wishlist-{{ product.id }}" 
+                                onclick="toggleWishlist({{ product.id }})"
+                                style="background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px;">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-title mb-1">{{ product.name }}</h6>
+                        <p class="text-muted small mb-2">{{ product.brand.name }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price">${{ product.price }}</span>
+                            <div class="rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <a href="{% url 'skinly:product_detail' product.id %}" class="btn btn-primary btn-sm w-100 mt-2">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Features Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--light-cream) 0%, var(--primary-sand) 100%);">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="feature-item">
+                    <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shipping-fast" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">Free Shipping</h5>
+                    <p class="text-muted">On orders over $50</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-item">
+                    <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--warm-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user-friends" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">Personal Recommendations</h5>
+                    <p class="text-muted">AI-powered beauty matching</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-item">
+                    <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--muted-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shield-alt" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">Quality Guarantee</h5>
+                    <p class="text-muted">30-day return policy</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-item">
+                    <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--dark-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-headset" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">Expert Support</h5>
+                    <p class="text-muted">Beauty consultants available 24/7</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-5" style="background: var(--dark-brown);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 style="color: var(--primary-gold); font-family: 'Playfair Display', serif;">Stay Beautiful</h3>
+                <p style="color: var(--light-cream);">Get the latest beauty tips, product launches, and exclusive offers delivered to your inbox.</p>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="email" class="form-control" placeholder="Enter your email address">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-envelope me-2"></i>Subscribe
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add floating animation -->
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(139, 105, 20, 0.2);
+}
+
+.feature-item {
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover .feature-icon {
+    transform: scale(1.1);
+}
+</style>
+
+<!-- Add CSRF token for AJAX requests -->
+{% csrf_token %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-focus search on page load (only on desktop)
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth > 768) {
+        setTimeout(() => {
+            document.getElementById('searchInput').focus();
+        }, 1000);
+    }
+});
+
+// Add some interaction animations
+document.querySelectorAll('.category-card, .product-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Skinly - Premium Makeup & Beauty{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            /* Sand/Gold/Brown Beige Color Palette */
+            --primary-sand: #F4E4BC;          /* Light sand */
+            --primary-gold: #D4AF37;          /* Classic gold */
+            --primary-brown: #8B6914;         /* Dark gold/brown */
+            --accent-beige: #F5F5DC;          /* Beige */
+            --warm-brown: #A0522D;            /* Sienna brown */
+            --light-cream: #FDF5E6;           /* Old lace */
+            --dark-brown: #654321;            /* Dark brown */
+            --muted-gold: #B8860B;            /* Dark goldenrod */
+            
+            /* Text colors */
+            --text-primary: #3C2414;          /* Dark brown for text */
+            --text-secondary: #6B4423;        /* Medium brown for secondary text */
+            --text-light: #8B6914;            /* Gold brown for light text */
+            
+            /* Component colors */
+            --card-bg: #FEFCF7;               /* Very light cream for cards */
+            --border-light: #E6D7B8;          /* Light border */
+            --shadow-color: rgba(139, 105, 20, 0.1); /* Gold shadow */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-cream);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%);
+            border-bottom: 2px solid var(--primary-gold);
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--dark-brown) !important;
+            text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-gold) !important;
+            transform: translateY(-1px);
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: var(--primary-gold);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--muted-gold) 100%);
+            border: 2px solid var(--primary-brown);
+            color: var(--light-cream);
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--muted-gold) 0%, var(--primary-brown) 100%);
+            border-color: var(--dark-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-gold);
+            color: var(--primary-gold);
+            background: transparent;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-gold);
+            color: var(--light-cream);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(139, 105, 20, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-sand) 0%, var(--accent-beige) 100%);
+            border-bottom: 2px solid var(--primary-gold);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--light-cream) 0%, var(--primary-sand) 50%, var(--accent-beige) 100%);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23D4AF37" opacity="0.1"/><circle cx="90" cy="90" r="1" fill="%23D4AF37" opacity="0.1"/><circle cx="50" cy="30" r="1" fill="%23D4AF37" opacity="0.1"/><circle cx="30" cy="70" r="1" fill="%23D4AF37" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--dark-brown);
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(212, 175, 55, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .search-bar {
+            background: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+        }
+
+        .product-card {
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .product-image {
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--accent-beige) 0%, var(--primary-sand) 100%);
+        }
+
+        .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+        }
+
+        .rating {
+            color: var(--primary-gold);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--dark-brown) 0%, var(--primary-brown) 100%);
+            color: var(--light-cream);
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer h5 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+        }
+
+        .footer a {
+            color: var(--accent-beige);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--primary-gold);
+        }
+
+        .badge {
+            background: var(--primary-gold);
+            color: var(--dark-brown);
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, var(--accent-beige) 0%, var(--light-cream) 100%);
+            border: 1px solid var(--primary-gold);
+            color: var(--text-primary);
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #F8D7DA 0%, #F5C6CB 100%);
+            border: 1px solid #F1948A;
+            color: #721C24;
+        }
+
+        .form-control {
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--accent-beige);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gold);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--muted-gold);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'skinly:home' %}">
+                <i class="fas fa-sparkles me-2"></i>Skinly
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'skinly:home' %}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'skinly:product_list' %}">
+                            <i class="fas fa-palette me-1"></i>Products
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'skinly:wishlist' %}">
+                            <i class="fas fa-heart me-1"></i>Wishlist
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ user.get_full_name|default:user.username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'skinly:profile' %}">
+                                <i class="fas fa-user-cog me-2"></i>Profile
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'skinly:order_list' %}">
+                                <i class="fas fa-shopping-bag me-2"></i>Orders
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'skinly:logout' %}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{% url 'skinly:cart' %}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                                0
+                                <span class="visually-hidden">items in cart</span>
+                            </span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'skinly:login' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle me-2"></i>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-sparkles me-2"></i>Skinly</h5>
+                    <p class="mb-3">Premium makeup and beauty products curated for your unique style and skin needs.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Shop</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'skinly:product_list' %}">All Products</a></li>
+                        <li><a href="{% url 'skinly:product_list' %}?product_type=FOUNDATION">Foundation</a></li>
+                        <li><a href="{% url 'skinly:product_list' %}?product_type=LIPSTICK">Lipstick</a></li>
+                        <li><a href="{% url 'skinly:product_list' %}?product_type=MASCARA">Mascara</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Newsletter</h5>
+                    <p>Get the latest beauty tips and product updates</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Your email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: var(--primary-gold);">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Skinly. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Add animation classes to elements when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.card, .hero-section, .product-card');
+            elements.forEach(el => observer.observe(el));
+        });
+
+        // Search functionality
+        function performSearch() {
+            const query = document.querySelector('#searchInput').value;
+            if (query.length > 2) {
+                window.location.href = `{% url 'skinly:product_list' %}?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Wishlist toggle
+        function toggleWishlist(productId) {
+            fetch(`{% url 'skinly:toggle_wishlist' 0 %}`.replace('0', productId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const icon = document.querySelector(`#wishlist-${productId} i`);
+                if (data.action === 'added') {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.style.color = '#D4AF37';
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    icon.style.color = '';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
