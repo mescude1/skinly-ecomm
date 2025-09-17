@@ -51,6 +51,14 @@ from .newsletter import (
     NewsletterCampaign,
 )
 
+# Import customer models
+from .customer import (
+    ShippingAddress,
+    Coupon,
+    UserCoupon,
+    UserCouponAvailable,
+)
+
 # Make all models available when importing from models
 __all__ = [
     # Choices
@@ -89,4 +97,10 @@ __all__ = [
     # Newsletter
     'NewsletterSubscriber',
     'NewsletterCampaign',
+    
+    # Customer
+    'ShippingAddress',
+    'Coupon',
+    'UserCoupon',
+    'UserCouponAvailable',
 ]

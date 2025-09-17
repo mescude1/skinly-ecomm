@@ -35,7 +35,7 @@ def home(request):
     return render(request, 'skinly/home.html', context)
 
 def index(request):
-    return redirect('home')
+    return redirect('skinly:home')
 
 def product_list(request):
     """Product catalog page with filtering and search"""
@@ -143,7 +143,7 @@ def add_to_cart(request, product_id):
         messages.error(request, 'Not enough stock available')
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({'success': False, 'error': 'Not enough stock available'})
-        return redirect('product_detail', product_id=product_id)
+        return redirect('skinly:product_detail', product_id=product_id)
     
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_item, created = CartItem.objects.get_or_create(
@@ -161,7 +161,7 @@ def add_to_cart(request, product_id):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'success': True, 'message': f'{product.name} added to cart'})
     
-    return redirect('cart')
+    return redirect('skinly:cart')
 
 @login_required
 def cart_view(request):
@@ -186,6 +186,30 @@ def cart_view(request):
     # Calculate free shipping needed
     free_shipping_needed = max(Decimal('0.00'), Decimal('50.00') - total)
     
+    # Get recommended products based on cart items
+    recommended_products = []
+    if cart_items:
+        # Get brands and product types from cart items
+        cart_brands = set(item.product.brand for item in cart_items)
+        cart_product_types = set(item.product.product_type for item in cart_items)
+        cart_product_ids = set(item.product.id for item in cart_items)
+        
+        # Find similar products by brand or product type
+        similar_products = Product.objects.filter(
+            Q(brand__in=cart_brands) | Q(product_type__in=cart_product_types),
+            stock_quantity__gt=0
+        ).exclude(id__in=cart_product_ids)
+        
+        # Get user's skin type for better recommendations
+        if request.user.skin_type:
+            similar_products = similar_products.filter(
+                Q(skin_type_compatibility__isnull=True) | 
+                Q(skin_type_compatibility=request.user.skin_type)
+            )
+        
+        # Order by rating and limit to 4 products
+        recommended_products = similar_products.order_by('-rating', '?')[:4]
+    
     context = {
         'cart_items': cart_items,
         'total': total,
@@ -193,6 +217,7 @@ def cart_view(request):
         'tax': tax,
         'final_total': final_total,
         'free_shipping_needed': free_shipping_needed,
+        'recommended_products': recommended_products,
     }
     return render(request, 'skinly/cart.html', context)
 
@@ -213,7 +238,7 @@ def update_cart_item(request, item_id):
     else:
         messages.error(request, 'Not enough stock available')
     
-    return redirect('cart')
+    return redirect('skinly:cart')
 
 @login_required
 def remove_from_cart(request, item_id):
@@ -221,7 +246,84 @@ def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     cart_item.delete()
     messages.success(request, 'Item removed from cart')
-    return redirect('cart')
+    return redirect('skinly:cart')
+
+@login_required
+def checkout_view(request):
+    """Checkout page"""
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_items = cart.cart_items.all()
+    except Cart.DoesNotExist:
+        messages.error(request, 'Your cart is empty')
+        return redirect('skinly:cart')
+    
+    if not cart_items:
+        messages.error(request, 'Your cart is empty')
+        return redirect('skinly:cart')
+    
+    # Calculate totals
+    subtotal = sum(item.product.price * item.quantity for item in cart_items)
+    shipping = 0 if subtotal >= 50 else Decimal('5.99')
+    tax = subtotal * Decimal('0.08')
+    total = subtotal + shipping + tax
+    
+    # Get user's shipping addresses
+    shipping_addresses = request.user.shipping_addresses.all()
+    
+    if request.method == 'POST':
+        # Process order
+        payment_method = request.POST.get('payment_method')
+        shipping_address_id = request.POST.get('shipping_address')
+        
+        if not shipping_address_id:
+            messages.error(request, 'Please select a shipping address')
+            return redirect('skinly:checkout')
+        
+        try:
+            shipping_address = request.user.shipping_addresses.get(id=shipping_address_id)
+        except ShippingAddress.DoesNotExist:
+            messages.error(request, 'Invalid shipping address')
+            return redirect('skinly:checkout')
+        
+        # Create order
+        order = Order.objects.create(
+            user=request.user,
+            shipping_address=f"{shipping_address.address_line_1}, {shipping_address.city}, {shipping_address.state} {shipping_address.zip_code}",
+            phone_number=shipping_address.phone_number or '',
+            total_price=total,
+            payment_method=payment_method,
+            status='PENDING'
+        )
+        
+        # Create order items
+        for cart_item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price=cart_item.product.price
+            )
+            
+            # Update product stock
+            cart_item.product.stock_quantity -= cart_item.quantity
+            cart_item.product.save()
+        
+        # Clear cart
+        cart_items.delete()
+        
+        messages.success(request, f'Order #{order.id} placed successfully!')
+        return redirect('skinly:order_detail', order_id=order.id)
+    
+    context = {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+        'shipping': shipping,
+        'tax': tax,
+        'total': total,
+        'shipping_addresses': shipping_addresses,
+    }
+    return render(request, 'skinly/checkout.html', context)
 
 @login_required
 def wishlist_view(request):
@@ -250,7 +352,7 @@ def toggle_wishlist(request, product_id):
         return JsonResponse({'action': action})
     
     messages.success(request, f'Product {action} to/from wishlist')
-    return redirect('product_detail', product_id=product_id)
+    return redirect('skinly:product_detail', product_id=product_id)
 
 @login_required
 def checkout(request):
@@ -260,11 +362,11 @@ def checkout(request):
         cart_items = cart.cart_items.all()
     except Cart.DoesNotExist:
         messages.error(request, 'Your cart is empty')
-        return redirect('cart')
+        return redirect('skinly:cart')
     
     if not cart_items:
         messages.error(request, 'Your cart is empty')
-        return redirect('cart')
+        return redirect('skinly:cart')
     
     total = sum(item.product.price * item.quantity for item in cart_items)
     
@@ -293,7 +395,7 @@ def checkout(request):
         cart_items.delete()
         
         messages.success(request, f'Order #{order.id} placed successfully!')
-        return redirect('order_detail', order_id=order.id)
+        return redirect('skinly:order_detail', order_id=order.id)
     
     context = {
         'cart_items': cart_items,
@@ -351,36 +453,118 @@ def add_review(request, product_id):
     
     action = 'updated' if not created else 'added'
     messages.success(request, f'Review {action} successfully')
-    return redirect('product_detail', product_id=product_id)
+    return redirect('skinly:product_detail', product_id=product_id)
 
 @login_required
 def profile_view(request):
     """User profile page"""
+    from .models import ShippingAddress, UserCouponAvailable, Color
+    
     if request.method == 'POST':
-        # Update profile
-        request.user.first_name = request.POST.get('first_name', '')
-        request.user.last_name = request.POST.get('last_name', '')
-        request.user.email = request.POST.get('email', '')
-        request.user.skin_tone = request.POST.get('skin_tone', '')
-        request.user.skin_type = request.POST.get('skin_type', '')
-        request.user.save()
+        # Check if this is an address form submission
+        if 'address_name' in request.POST:
+            # Handle address creation
+            address_name = request.POST.get('address_name', '').strip()
+            first_name = request.POST.get('address_first_name', '').strip()
+            last_name = request.POST.get('address_last_name', '').strip()
+            address_line_1 = request.POST.get('address_line_1', '').strip()
+            address_line_2 = request.POST.get('address_line_2', '').strip()
+            city = request.POST.get('city', '').strip()
+            state = request.POST.get('state', '').strip()
+            postal_code = request.POST.get('postal_code', '').strip()
+            phone = request.POST.get('phone', '').strip()
+            is_default = request.POST.get('is_default') == 'on'
+            
+            if address_name and first_name and last_name and address_line_1 and city and state and postal_code:
+                try:
+                    ShippingAddress.objects.create(
+                        user=request.user,
+                        name=address_name,
+                        first_name=first_name,
+                        last_name=last_name,
+                        address_line_1=address_line_1,
+                        address_line_2=address_line_2,
+                        city=city,
+                        state=state,
+                        postal_code=postal_code,
+                        phone=phone,
+                        is_default=is_default
+                    )
+                    messages.success(request, 'Address added successfully!')
+                except Exception as e:
+                    messages.error(request, 'Error adding address. Please try again.')
+            else:
+                messages.error(request, 'Please fill in all required fields.')
+            
+            return redirect('skinly:profile')
         
-        # Update taste profile
-        taste_profile, created = TasteProfile.objects.get_or_create(
-            user=request.user,
-            defaults={'user': request.user}
-        )
-        
-        if not request.user.taste_profile:
-            request.user.taste_profile = taste_profile
+        else:
+            # Handle profile update
+            request.user.first_name = request.POST.get('first_name', '')
+            request.user.last_name = request.POST.get('last_name', '')
+            request.user.email = request.POST.get('email', '')
+            request.user.skin_tone = request.POST.get('skin_tone', '')
+            request.user.skin_type = request.POST.get('skin_type', '')
             request.user.save()
-        
-        messages.success(request, 'Profile updated successfully')
-        return redirect('profile')
+            
+            # Update taste profile
+            if not request.user.taste_profile:
+                taste_profile = TasteProfile.objects.create()
+                request.user.taste_profile = taste_profile
+                request.user.save()
+            else:
+                taste_profile = request.user.taste_profile
+            
+            # Update taste profile preferences
+            preferred_product_types = request.POST.getlist('preferred_product_types')
+            preferred_finish_types = request.POST.getlist('preferred_finish_types')
+            preferred_colors = request.POST.getlist('preferred_colors')
+            
+            taste_profile.preferred_product_types = ','.join(preferred_product_types)
+            taste_profile.preferred_finish_types = ','.join(preferred_finish_types)
+            taste_profile.save()
+            
+            # Update preferred colors
+            taste_profile.preferred_colors.clear()
+            if preferred_colors:
+                taste_profile.preferred_colors.set(preferred_colors)
+            
+            messages.success(request, 'Profile updated successfully')
+            return redirect('skinly:profile')
+    
+    # Get user data for display
+    user_reviews = Review.objects.filter(user=request.user).order_by('-created_at')[:10]
+    user_orders = Order.objects.filter(user=request.user).order_by('-created_at')[:10]
+    shipping_addresses = ShippingAddress.objects.filter(user=request.user)
+    available_coupons = UserCouponAvailable.objects.filter(
+        user=request.user, 
+        is_used=False,
+        coupon__is_active=True
+    ).select_related('coupon')
+    
+    # Get taste profile data
+    taste_profile = request.user.taste_profile
+    current_product_types = []
+    current_finish_types = []
+    if taste_profile:
+        if taste_profile.preferred_product_types:
+            current_product_types = taste_profile.preferred_product_types.split(',')
+        if taste_profile.preferred_finish_types:
+            current_finish_types = taste_profile.preferred_finish_types.split(',')
     
     context = {
         'skin_tones': SkinTone.choices,
         'skin_types': SkinType.choices,
+        'product_types': ProductType.choices,
+        'finish_types': FinishType.choices,
+        'colors': Color.objects.all(),
+        'user_reviews': user_reviews,
+        'user_orders': user_orders,
+        'shipping_addresses': shipping_addresses,
+        'available_coupons': available_coupons,
+        'current_product_types': current_product_types,
+        'current_finish_types': current_finish_types,
+        'taste_profile': taste_profile,
     }
     return render(request, 'skinly/profile.html', context)
 
@@ -423,6 +607,14 @@ def shipping_info_view(request):
 def returns_view(request):
     """Returns policy FAQ page"""
     return render(request, 'skinly/returns.html')
+
+def privacy_policy_view(request):
+    """Privacy policy page"""
+    return render(request, 'skinly/privacy_policy.html')
+
+def terms_of_service_view(request):
+    """Terms of service page"""
+    return render(request, 'skinly/terms_of_service.html')
 
 @require_POST
 def newsletter_subscribe(request):

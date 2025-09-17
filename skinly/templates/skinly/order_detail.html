@@ -1,0 +1,450 @@
+{% extends 'skinly/base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} - Skinly{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-header {
+        background: linear-gradient(135deg, var(--primary-sand), var(--accent-beige));
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .order-header h1 {
+        color: var(--primary-brown);
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 0.5rem;
+    }
+    
+    .order-status {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        margin-top: 1rem;
+    }
+    
+    .status-pending {
+        background: linear-gradient(135deg, #FFF3CD, #FCF4A3);
+        color: #856404;
+        border: 2px solid #FFEAA7;
+    }
+    
+    .status-shipped {
+        background: linear-gradient(135deg, #D1ECF1, #AED6F1);
+        color: #0C5460;
+        border: 2px solid #86CFDA;
+    }
+    
+    .status-delivered {
+        background: linear-gradient(135deg, #D4EDDA, #A3D977);
+        color: #155724;
+        border: 2px solid #7BD45A;
+    }
+    
+    .status-canceled {
+        background: linear-gradient(135deg, #F8D7DA, #F5A1A8);
+        color: #721C24;
+        border: 2px solid #E85D75;
+    }
+    
+    .order-section {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .order-section h3 {
+        color: var(--primary-brown);
+        border-bottom: 2px solid var(--primary-gold);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .order-item {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .order-item:last-child {
+        border-bottom: none;
+    }
+    
+    .item-image {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--accent-beige), var(--primary-sand));
+        border-radius: 15px;
+        margin-right: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-brown);
+        font-size: 1.5rem;
+    }
+    
+    .item-details {
+        flex: 1;
+    }
+    
+    .item-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .item-brand {
+        color: var(--text-secondary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .item-type {
+        color: var(--muted-gold);
+        font-size: 0.9rem;
+        text-transform: capitalize;
+    }
+    
+    .item-quantity {
+        text-align: center;
+        min-width: 100px;
+    }
+    
+    .item-price {
+        text-align: right;
+        min-width: 120px;
+    }
+    
+    .price-individual {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .price-total {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-gold);
+    }
+    
+    .order-summary {
+        background: var(--accent-beige);
+        border-radius: 10px;
+        padding: 1.5rem;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+    
+    .summary-row.total {
+        border-top: 2px solid var(--primary-gold);
+        margin-top: 1rem;
+        padding-top: 1rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+    
+    .tracking-timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+    
+    .timeline-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .timeline-item:before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 50px;
+        width: 2px;
+        height: 60px;
+        background: var(--border-light);
+        z-index: 1;
+    }
+    
+    .timeline-item:last-child:before {
+        display: none;
+    }
+    
+    .timeline-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1.5rem;
+        z-index: 2;
+        position: relative;
+    }
+    
+    .timeline-icon.completed {
+        background: var(--primary-gold);
+        color: white;
+    }
+    
+    .timeline-icon.pending {
+        background: var(--border-light);
+        color: var(--text-secondary);
+    }
+    
+    .timeline-content h5 {
+        margin-bottom: 0.25rem;
+        color: var(--primary-brown);
+    }
+    
+    .timeline-date {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 1rem 0;
+    }
+    
+    .breadcrumb-item a {
+        color: var(--muted-gold);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--text-primary);
+    }
+    
+    .order-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+    
+    .btn-reorder {
+        background: linear-gradient(135deg, var(--primary-gold), var(--muted-gold));
+        border: none;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-reorder:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'skinly:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'skinly:order_list' %}">My Orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order #{{ order.id }}</li>
+        </ol>
+    </nav>
+    
+    <!-- Order Header -->
+    <div class="order-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1><i class="fas fa-receipt me-3"></i>Order #{{ order.id }}</h1>
+                <p class="mb-0">Placed on {{ order.created_at|date:"F d, Y" }} at {{ order.created_at|time:"g:i A" }}</p>
+                <div>
+                    <span class="order-status status-{{ order.status|lower }}">
+                        {% if order.status == 'PENDING' %}
+                            <i class="fas fa-clock me-2"></i>Processing
+                        {% elif order.status == 'SHIPPED' %}
+                            <i class="fas fa-truck me-2"></i>Shipped
+                        {% elif order.status == 'DELIVERED' %}
+                            <i class="fas fa-check-circle me-2"></i>Delivered
+                        {% elif order.status == 'CANCELED' %}
+                            <i class="fas fa-times-circle me-2"></i>Canceled
+                        {% endif %}
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="fs-2 fw-bold" style="color: var(--primary-gold);">
+                    ${{ order.total_price }}
+                </div>
+                <div class="text-muted">Total Amount</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Order Items -->
+            <div class="order-section">
+                <h3><i class="fas fa-box me-2"></i>Order Items</h3>
+                {% for item in order.order_items.all %}
+                    <div class="order-item">
+                        <div class="item-image">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">{{ item.product.name }}</div>
+                            <div class="item-brand">{{ item.product.brand.name }}</div>
+                            <div class="item-type">{{ item.product.get_product_type_display }}</div>
+                        </div>
+                        <div class="item-quantity">
+                            <div class="fw-bold">Qty: {{ item.quantity }}</div>
+                            <div class="price-individual">${{ item.price }} each</div>
+                        </div>
+                        <div class="item-price">
+                            <div class="price-total">${{ item.price|floatformat:2 }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Order Tracking -->
+            <div class="order-section">
+                <h3><i class="fas fa-route me-2"></i>Order Tracking</h3>
+                <div class="tracking-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-icon completed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Order Placed</h5>
+                            <div class="timeline-date">{{ order.created_at|date:"F d, Y" }} at {{ order.created_at|time:"g:i A" }}</div>
+                            <small class="text-muted">Your order has been received and is being processed.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon {% if order.status != 'PENDING' %}completed{% else %}pending{% endif %}">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Processing</h5>
+                            {% if order.status != 'PENDING' %}
+                                <div class="timeline-date">{{ order.updated_at|date:"F d, Y" }}</div>
+                                <small class="text-muted">Your order is being prepared for shipment.</small>
+                            {% else %}
+                                <small class="text-muted">Your order is currently being processed.</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon {% if order.status == 'SHIPPED' or order.status == 'DELIVERED' %}completed{% else %}pending{% endif %}">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Shipped</h5>
+                            {% if order.status == 'SHIPPED' or order.status == 'DELIVERED' %}
+                                <div class="timeline-date">{{ order.updated_at|date:"F d, Y" }}</div>
+                                <small class="text-muted">Your order is on its way to you.</small>
+                            {% else %}
+                                <small class="text-muted">Your order will be shipped soon.</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon {% if order.status == 'DELIVERED' %}completed{% else %}pending{% endif %}">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Delivered</h5>
+                            {% if order.status == 'DELIVERED' %}
+                                <div class="timeline-date">{{ order.updated_at|date:"F d, Y" }}</div>
+                                <small class="text-success">Your order has been delivered successfully!</small>
+                            {% else %}
+                                <small class="text-muted">Your order will be delivered to your address.</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Order Summary -->
+            <div class="order-section">
+                <h3><i class="fas fa-calculator me-2"></i>Order Summary</h3>
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span>Subtotal ({{ order.order_items.count }} item{{ order.order_items.count|pluralize }})</span>
+                        <span>${{ order.total_price }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>{% if order.total_price >= 50 %}Free{% else %}$5.99{% endif %}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span>${{ order.total_price|floatformat:2 }}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span style="color: var(--primary-gold);">${{ order.total_price }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Actions -->
+            {% if order.status == 'DELIVERED' %}
+                <div class="order-actions">
+                    <button class="btn btn-reorder">
+                        <i class="fas fa-redo me-2"></i>Reorder Items
+                    </button>
+                    <a href="{% url 'skinly:contact' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-headset me-2"></i>Contact Support
+                    </a>
+                </div>
+            {% elif order.status == 'PENDING' %}
+                <div class="order-actions">
+                    <button class="btn btn-outline-danger">
+                        <i class="fas fa-times me-2"></i>Cancel Order
+                    </button>
+                    <a href="{% url 'skinly:contact' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-headset me-2"></i>Contact Support
+                    </a>
+                </div>
+            {% endif %}
+            
+            <!-- Help Section -->
+            <div class="order-section">
+                <h3><i class="fas fa-question-circle me-2"></i>Need Help?</h3>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'skinly:contact' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>Contact Us
+                    </a>
+                    <a href="{% url 'skinly:returns' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-undo me-2"></i>Return Policy
+                    </a>
+                    <a href="{% url 'skinly:shipping_info' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-truck me-2"></i>Shipping Info
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

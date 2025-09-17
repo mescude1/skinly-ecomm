@@ -74,11 +74,25 @@
             margin: 0 0.5rem;
             transition: all 0.3s ease;
             position: relative;
+            border-radius: 8px;
+            padding: 0.5rem 1rem !important;
         }
 
         .navbar-nav .nav-link:hover {
             color: var(--primary-gold) !important;
+            background-color: rgba(212, 175, 55, 0.1);
             transform: translateY(-1px);
+        }
+
+        .navbar-nav .nav-link.active {
+            color: var(--light-cream) !important;
+            background: linear-gradient(135deg, var(--primary-gold), var(--muted-gold));
+            font-weight: 600;
+        }
+
+        .navbar-nav .nav-link.active:hover {
+            color: var(--light-cream) !important;
+            background: linear-gradient(135deg, var(--muted-gold), var(--primary-brown));
         }
 
         .navbar-nav .nav-link::after {
@@ -86,7 +100,7 @@
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -5px;
+            bottom: -2px;
             left: 50%;
             background: var(--primary-gold);
             transition: all 0.3s ease;
@@ -95,6 +109,11 @@
 
         .navbar-nav .nav-link:hover::after {
             width: 80%;
+        }
+
+        .navbar-nav .nav-link.active::after {
+            width: 100%;
+            background: var(--light-cream);
         }
 
         .btn-primary {
@@ -362,6 +381,11 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'skinly:order_list' %}">
+                            <i class="fas fa-shopping-bag me-1"></i>Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link position-relative" href="{% url 'skinly:wishlist' %}">
                             <i class="fas fa-heart me-1"></i>Wishlist
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background: var(--primary-gold); color: var(--dark-brown);" id="wishlist-count">
@@ -484,12 +508,12 @@
             <hr class="my-4" style="border-color: var(--primary-gold);">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="mb-0">&copy; 2024 Skinly. All rights reserved.</p>
+                    <p class="mb-0">&copy; 2025 Skinly. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="#" class="me-3">Privacy Policy</a>
-                    <a href="#" class="me-3">Terms of Service</a>
-                    <a href="#">Cookies</a>
+                    <a href="{% url 'skinly:privacy_policy' %}" class="me-3">Privacy Policy</a>
+                    <a href="{% url 'skinly:terms_of_service' %}" class="me-3">Terms of Service</a>
+                    <a href="{% url 'skinly:contact' %}">Contact</a>
                 </div>
             </div>
         </div>
