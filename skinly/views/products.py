@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.core.paginator import Paginator
 from django.db.models import Avg, Q
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from skinly.models import Product, Review, SkinType, ProductType, SearchEngine, Brand
@@ -103,3 +104,32 @@ def product_detail(request, product_id):
         'similar_products': similar_products,
     }
     return render(request, 'skinly/product_detail.html', context)
+
+
+def search_products(request):
+    """AJAX search for products"""
+    query = request.GET.get('q', '')
+
+    if len(query) < 2:
+        return JsonResponse({'products': []})
+
+    search_engine = SearchEngine.objects.first()
+    if search_engine:
+        products = search_engine.search(query)[:10]
+    else:
+        products = Product.objects.filter(
+            Q(name__icontains=query) | Q(brand__name__icontains=query),
+            stock_quantity__gt=0
+        )[:10]
+
+    product_data = []
+    for product in products:
+        product_data.append({
+            'id': product.id,
+            'name': product.name,
+            'brand': product.brand.name,
+            'price': float(product.price),
+            'image_url': '/static/images/placeholder.jpg',  # Add image field to model later
+        })
+
+    return JsonResponse({'products': product_data})

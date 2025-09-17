@@ -1,3 +1,13 @@
+import logging
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_POST
+
+from skinly.models import NewsletterSubscriber
+
+
 def privacy_policy_view(request):
     """Privacy policy page"""
     return render(request, 'skinly/privacy_policy.html')
@@ -11,8 +21,6 @@ def terms_of_service_view(request):
 @require_POST
 def newsletter_subscribe(request):
     """Handle newsletter subscription"""
-    from .models import NewsletterSubscriber
-    import logging
 
     logger = logging.getLogger(__name__)
 
@@ -51,3 +59,24 @@ def newsletter_subscribe(request):
 
     # Return to the page where the form was submitted
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required
+def profile_view(request):
+    """User profile page"""
+    return render(request, 'skinly/profile.html')
+
+
+def contact_view(request):
+    """Contact page"""
+    return render(request, 'skinly/contact.html')
+
+
+def shipping_info_view(request):
+    """Shipping information page"""
+    return render(request, 'skinly/shipping_info.html')
+
+
+def returns_view(request):
+    """Returns policy page"""
+    return render(request, 'skinly/returns.html')
