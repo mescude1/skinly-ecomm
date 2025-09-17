@@ -480,6 +480,11 @@ def signup_view(request):
             messages.success(request, f'Account created for {username}! Welcome to Skinly.')
             login(request, user)
             return redirect('skinly:home')
+        else:
+            # Add form errors to messages for debugging
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = SignUpForm()
     

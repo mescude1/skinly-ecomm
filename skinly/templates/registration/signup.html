@@ -52,6 +52,28 @@
                                 <div class="form-text">Your username must be unique and 3-30 characters long.</div>
                             </div>
                             
+                            <!-- Email Field -->
+                            <div class="mb-4">
+                                <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold" style="color: var(--text-primary);">
+                                    <i class="fas fa-envelope me-2"></i>Email
+                                </label>
+                                <input type="email" 
+                                       class="form-control form-control-lg {% if form.email.errors %}is-invalid{% endif %}" 
+                                       id="{{ form.email.id_for_label }}" 
+                                       name="{{ form.email.name }}" 
+                                       value="{{ form.email.value|default:'' }}"
+                                       placeholder="Enter your email address"
+                                       required>
+                                {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">We'll use this to send you beauty tips and exclusive offers.</div>
+                            </div>
+                            
                             <!-- Password Field -->
                             <div class="mb-4">
                                 <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold" style="color: var(--text-primary);">
