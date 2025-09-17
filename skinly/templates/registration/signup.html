@@ -1,6 +1,6 @@
 {% extends 'skinly/base.html' %}
 
-{% block title %}Login - Skinly{% endblock %}
+{% block title %}Sign Up - Skinly{% endblock %}
 
 {% block content %}
 <section class="py-5" style="background: linear-gradient(135deg, var(--light-cream) 0%, var(--primary-sand) 100%); min-height: 80vh;">
@@ -11,9 +11,9 @@
                     <!-- Header -->
                     <div class="card-header text-center py-4" style="background: linear-gradient(135deg, var(--primary-gold) 0%, var(--muted-gold) 100%); border: none;">
                         <h2 class="mb-0" style="font-family: 'Playfair Display', serif; color: var(--light-cream);">
-                            <i class="fas fa-sparkles me-2"></i>Welcome Back
+                            <i class="fas fa-user-plus me-2"></i>Join Skinly
                         </h2>
-                        <p class="mb-0 mt-2" style="color: var(--light-cream); opacity: 0.9;">Sign in to your Skinly account</p>
+                        <p class="mb-0 mt-2" style="color: var(--light-cream); opacity: 0.9;">Create your beauty account</p>
                     </div>
                     
                     <!-- Body -->
@@ -40,7 +40,7 @@
                                        id="{{ form.username.id_for_label }}" 
                                        name="{{ form.username.name }}" 
                                        value="{{ form.username.value|default:'' }}"
-                                       placeholder="Enter your username"
+                                       placeholder="Choose a unique username"
                                        required>
                                 {% if form.username.errors %}
                                 <div class="invalid-feedback">
@@ -49,39 +49,78 @@
                                     {% endfor %}
                                 </div>
                                 {% endif %}
+                                <div class="form-text">Your username must be unique and 3-30 characters long.</div>
                             </div>
                             
                             <!-- Password Field -->
                             <div class="mb-4">
-                                <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold" style="color: var(--text-primary);">
+                                <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold" style="color: var(--text-primary);">
                                     <i class="fas fa-lock me-2"></i>Password
                                 </label>
                                 <div class="input-group">
                                     <input type="password" 
-                                           class="form-control form-control-lg {% if form.password.errors %}is-invalid{% endif %}" 
-                                           id="{{ form.password.id_for_label }}" 
-                                           name="{{ form.password.name }}"
-                                           placeholder="Enter your password"
+                                           class="form-control form-control-lg {% if form.password1.errors %}is-invalid{% endif %}" 
+                                           id="{{ form.password1.id_for_label }}" 
+                                           name="{{ form.password1.name }}"
+                                           placeholder="Create a strong password"
                                            required>
-                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()" style="border-left: none;">
-                                        <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('{{ form.password1.id_for_label }}')" style="border-left: none;">
+                                        <i class="fas fa-eye" id="togglePasswordIcon1"></i>
                                     </button>
-                                    {% if form.password.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.password.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
+                                </div>
+                                {% if form.password1.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.password1.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <small>Your password must contain at least 8 characters and can't be too common.</small>
                                 </div>
                             </div>
                             
-                            <!-- Remember Me -->
+                            <!-- Confirm Password Field -->
+                            <div class="mb-4">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold" style="color: var(--text-primary);">
+                                    <i class="fas fa-lock me-2"></i>Confirm Password
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" 
+                                           class="form-control form-control-lg {% if form.password2.errors %}is-invalid{% endif %}" 
+                                           id="{{ form.password2.id_for_label }}" 
+                                           name="{{ form.password2.name }}"
+                                           placeholder="Confirm your password"
+                                           required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('{{ form.password2.id_for_label }}')" style="border-left: none;">
+                                        <i class="fas fa-eye" id="togglePasswordIcon2"></i>
+                                    </button>
+                                </div>
+                                {% if form.password2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Terms Agreement -->
                             <div class="mb-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
-                                    <label class="form-check-label" for="rememberMe" style="color: var(--text-secondary);">
-                                        Remember me
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms" style="color: var(--text-secondary);">
+                                        I agree to the <a href="#" style="color: var(--primary-gold);">Terms of Service</a> and <a href="#" style="color: var(--primary-gold);">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Newsletter Subscription -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="subscribeNewsletter" name="subscribe_newsletter" checked>
+                                    <label class="form-check-label" for="subscribeNewsletter" style="color: var(--text-secondary);">
+                                        <i class="fas fa-envelope me-1"></i>Subscribe to our newsletter for beauty tips and exclusive offers
                                     </label>
                                 </div>
                             </div>
@@ -89,15 +128,8 @@
                             <!-- Submit Button -->
                             <div class="d-grid mb-4">
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                    <i class="fas fa-user-plus me-2"></i>Create Account
                                 </button>
-                            </div>
-                            
-                            <!-- Forgot Password Link -->
-                            <div class="text-center mb-4">
-                                <a href="#" style="color: var(--primary-gold); text-decoration: none;">
-                                    <i class="fas fa-key me-1"></i>Forgot your password?
-                                </a>
                             </div>
                         </form>
                         
@@ -110,22 +142,22 @@
                             </div>
                         </div>
                         
-                        <!-- Social Login (placeholder) -->
+                        <!-- Social Signup (placeholder) -->
                         <div class="d-grid gap-2 mb-4">
                             <button type="button" class="btn btn-outline-dark">
-                                <i class="fab fa-google me-2"></i>Continue with Google
+                                <i class="fab fa-google me-2"></i>Sign up with Google
                             </button>
                             <button type="button" class="btn btn-outline-primary">
-                                <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
+                                <i class="fab fa-facebook-f me-2"></i>Sign up with Facebook
                             </button>
                         </div>
                         
-                        <!-- Sign Up Link -->
+                        <!-- Login Link -->
                         <div class="text-center">
                             <p class="mb-0" style="color: var(--text-secondary);">
-                                Don't have an account? 
-                                <a href="{% url 'skinly:signup' %}" style="color: var(--primary-gold); text-decoration: none; font-weight: 600;">
-                                    Sign up here
+                                Already have an account? 
+                                <a href="{% url 'skinly:login' %}" style="color: var(--primary-gold); text-decoration: none; font-weight: 600;">
+                                    Sign in here
                                 </a>
                             </p>
                         </div>
@@ -135,7 +167,7 @@
                 <!-- Guest Shopping -->
                 <div class="text-center mt-4">
                     <p style="color: var(--text-secondary);">
-                        Want to browse without signing in?
+                        Want to browse without signing up?
                         <a href="{% url 'skinly:product_list' %}" style="color: var(--primary-gold); text-decoration: none; font-weight: 600;">
                             <i class="fas fa-shopping-bag me-1"></i>Continue as Guest
                         </a>
@@ -150,41 +182,41 @@
 <section class="py-5" style="background: var(--accent-beige);">
     <div class="container">
         <div class="text-center mb-5">
-            <h3 style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Why Sign In?</h3>
-            <p class="text-muted">Unlock exclusive features when you create an account</p>
+            <h3 style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Join the Skinly Community</h3>
+            <p class="text-muted">Discover what makes our beauty platform special</p>
         </div>
         
         <div class="row g-4">
             <div class="col-md-3 text-center">
                 <div class="benefit-icon mb-3" style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-user-friends" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    <i class="fas fa-sparkles" style="color: var(--light-cream); font-size: 2rem;"></i>
                 </div>
-                <h5 style="color: var(--text-primary);">Personalized Recommendations</h5>
-                <p class="text-muted small">Get product suggestions tailored to your skin type and preferences</p>
+                <h5 style="color: var(--text-primary);">AI-Powered Matching</h5>
+                <p class="text-muted small">Our smart algorithm finds products perfect for your unique beauty profile</p>
             </div>
             
             <div class="col-md-3 text-center">
                 <div class="benefit-icon mb-3" style="width: 80px; height: 80px; background: var(--warm-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-heart" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    <i class="fas fa-crown" style="color: var(--light-cream); font-size: 2rem;"></i>
                 </div>
-                <h5 style="color: var(--text-primary);">Wishlist & Favorites</h5>
-                <p class="text-muted small">Save products you love and get notified about sales</p>
+                <h5 style="color: var(--text-primary);">Exclusive Member Perks</h5>
+                <p class="text-muted small">Early access to new products, member-only discounts, and special events</p>
             </div>
             
             <div class="col-md-3 text-center">
                 <div class="benefit-icon mb-3" style="width: 80px; height: 80px; background: var(--muted-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-shopping-bag" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    <i class="fas fa-users" style="color: var(--light-cream); font-size: 2rem;"></i>
                 </div>
-                <h5 style="color: var(--text-primary);">Order History</h5>
-                <p class="text-muted small">Track orders and easily reorder your favorite products</p>
+                <h5 style="color: var(--text-primary);">Beauty Community</h5>
+                <p class="text-muted small">Connect with other beauty lovers, share reviews, and get expert advice</p>
             </div>
             
             <div class="col-md-3 text-center">
                 <div class="benefit-icon mb-3" style="width: 80px; height: 80px; background: var(--dark-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-star" style="color: var(--light-cream); font-size: 2rem;"></i>
+                    <i class="fas fa-gift" style="color: var(--light-cream); font-size: 2rem;"></i>
                 </div>
-                <h5 style="color: var(--text-primary);">Exclusive Offers</h5>
-                <p class="text-muted small">Access member-only discounts and early product launches</p>
+                <h5 style="color: var(--text-primary);">Birthday Rewards</h5>
+                <p class="text-muted small">Celebrate your special day with exclusive birthday gifts and surprises</p>
             </div>
         </div>
     </div>
@@ -269,6 +301,23 @@
     box-shadow: 0 4px 15px rgba(24,119,242,0.2);
 }
 
+.form-text {
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+/* Password strength indicator */
+.password-strength {
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+}
+
+.password-weak { background: #dc3545; }
+.password-medium { background: #ffc107; }
+.password-strong { background: #28a745; }
+
 /* Animation for form validation */
 .was-validated .form-control:valid {
     border-color: #28a745;
@@ -290,9 +339,10 @@
 {% block extra_js %}
 <script>
 // Toggle password visibility
-function togglePassword() {
-    const passwordField = document.getElementById('{{ form.password.id_for_label }}');
-    const toggleIcon = document.getElementById('togglePasswordIcon');
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const iconId = fieldId.includes('password1') ? 'togglePasswordIcon1' : 'togglePasswordIcon2';
+    const toggleIcon = document.getElementById(iconId);
     
     if (passwordField.type === 'password') {
         passwordField.type = 'text';
@@ -305,11 +355,56 @@ function togglePassword() {
     }
 }
 
+// Password strength checker
+function checkPasswordStrength(password) {
+    let strength = 0;
+    
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+    return strength;
+}
+
 // Form validation
 (function() {
     'use strict';
     
     const form = document.querySelector('.needs-validation');
+    const password1 = document.getElementById('{{ form.password1.id_for_label }}');
+    const password2 = document.getElementById('{{ form.password2.id_for_label }}');
+    
+    // Password strength indicator
+    if (password1) {
+        const strengthIndicator = document.createElement('div');
+        strengthIndicator.className = 'password-strength';
+        password1.parentNode.insertBefore(strengthIndicator, password1.nextSibling);
+        
+        password1.addEventListener('input', function() {
+            const strength = checkPasswordStrength(this.value);
+            
+            if (strength < 2) {
+                strengthIndicator.className = 'password-strength password-weak';
+            } else if (strength < 4) {
+                strengthIndicator.className = 'password-strength password-medium';
+            } else {
+                strengthIndicator.className = 'password-strength password-strong';
+            }
+        });
+    }
+    
+    // Password confirmation validation
+    if (password2) {
+        password2.addEventListener('input', function() {
+            if (this.value !== password1.value) {
+                this.setCustomValidity('Passwords do not match');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    }
     
     form.addEventListener('submit', function(event) {
         if (!form.checkValidity()) {
@@ -329,15 +424,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Social login handlers (placeholder)
+// Social signup handlers (placeholder)
 document.querySelector('.btn-outline-dark').addEventListener('click', function() {
-    // Google login implementation
-    console.log('Google login clicked');
+    console.log('Google signup clicked');
 });
 
 document.querySelector('.btn-outline-primary').addEventListener('click', function() {
-    // Facebook login implementation
-    console.log('Facebook login clicked');
+    console.log('Facebook signup clicked');
 });
 
 // Smooth animations
@@ -351,14 +444,17 @@ document.querySelectorAll('.benefit-icon').forEach(icon => {
     });
 });
 
-// Enter key handling
-document.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') {
-        const form = document.querySelector('form');
-        if (form) {
-            form.submit();
-        }
-    }
-});
+// Username availability check (placeholder)
+const usernameField = document.getElementById('{{ form.username.id_for_label }}');
+if (usernameField) {
+    let checkTimeout;
+    usernameField.addEventListener('input', function() {
+        clearTimeout(checkTimeout);
+        checkTimeout = setTimeout(() => {
+            // Placeholder for username availability check
+            console.log('Checking username availability:', this.value);
+        }, 500);
+    });
+}
 </script>
 {% endblock %}
