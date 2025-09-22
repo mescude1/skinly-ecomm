@@ -1,0 +1,656 @@
+{% extends 'skinly/base.html' %}
+{% load static %}
+
+{% block title %}My Profile - Skinly{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-nav {
+        background: linear-gradient(135deg, var(--color-sand), var(--color-sand-light));
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .profile-nav .nav-link {
+        color: var(--color-primary);
+        border: none;
+        border-radius: 10px;
+        margin: 0 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-nav .nav-link.active {
+        background: var(--light-cream);
+        color: var(--primary-gold);
+    }
+    
+    .profile-nav .nav-link:hover {
+        background: var(--warm-brown);
+        color: var(--muted-gold);
+    }
+    
+    .profile-section {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .taste-preferences {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .taste-preferences .form-check {
+        background: var(--primary-sand);
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        margin: 0;
+        border: 2px solid var(--warm-brown);
+        transition: all 0.3s ease;
+    }
+    
+    .taste-preferences .form-check:has(input:checked) {
+        background: var(--light-cream);
+        color: var(--muted-gold);
+        border-color: var(--warm-brown);
+    }
+    
+    .taste-preferences .form-check-input {
+        display: none;
+    }
+    
+    .taste-preferences .form-check-label {
+        cursor: pointer;
+        margin: 0;
+        font-weight: 500;
+    }
+    
+    .color-swatch {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 3px solid transparent;
+        cursor: pointer;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+    }
+    
+    .color-swatch.selected {
+        border-color: var(--color-primary);
+        transform: scale(1.2);
+    }
+    
+    .color-preferences {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .order-item {
+        border: 1px solid var(--color-sand);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .order-item:hover {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .review-item {
+        border-left: 4px solid var(--color-accent);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: var(--color-sand-light);
+        border-radius: 0 10px 10px 0;
+    }
+    
+    .coupon-card {
+        background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .coupon-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100px;
+        height: 100px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    
+    .address-card {
+        border: 2px solid var(--color-sand);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .address-card.default {
+        border-color: var(--color-primary);
+        background: var(--color-sand-light);
+    }
+    
+    .rating-stars {
+        color: var(--color-accent);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #B8860B, #8B6914);
+        border: none;
+        border-radius: 25px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #8B6914, #654321);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        color: white;
+    }
+    
+    .btn-primary:focus, .btn-primary:active {
+        background: linear-gradient(135deg, #8B6914, #654321);
+        color: white;
+        box-shadow: 0 0 0 0.2rem rgba(184, 134, 11, 0.25);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-4" style="color: var(--color-primary); font-weight: 300;">
+                <i class="fas fa-user-circle me-3"></i>My Profile
+            </h1>
+            
+            <!-- Profile Navigation -->
+            <div class="profile-nav">
+                <ul class="nav nav-pills justify-content-center" id="profileTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="pill" href="#personal">
+                            <i class="fas fa-user me-2"></i>Personal Info
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="#taste">
+                            <i class="fas fa-palette me-2"></i>Taste Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="#orders">
+                            <i class="fas fa-shopping-bag me-2"></i>Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="#reviews">
+                            <i class="fas fa-star me-2"></i>Reviews
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="#coupons">
+                            <i class="fas fa-ticket-alt me-2"></i>Coupons
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="#addresses">
+                            <i class="fas fa-map-marker-alt me-2"></i>Addresses
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab-content">
+        <!-- Personal Information Tab -->
+        <div class="tab-pane fade show active" id="personal">
+            <div class="profile-section">
+                <h3 class="mb-4"><i class="fas fa-user-edit me-3"></i>Personal Information</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ user.email }}">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Skin Tone</label>
+                                <select class="form-control" name="skin_tone">
+                                    <option value="">Select your skin tone</option>
+                                    {% for value, label in skin_tones %}
+                                        <option value="{{ value }}" {% if user.skin_tone == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Skin Type</label>
+                                <select class="form-control" name="skin_type">
+                                    <option value="">Select your skin type</option>
+                                    {% for value, label in skin_types %}
+                                        <option value="{{ value }}" {% if user.skin_type == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Update Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Taste Profile Tab -->
+        <div class="tab-pane fade" id="taste">
+            <div class="profile-section">
+                <h3 class="mb-4"><i class="fas fa-palette me-3"></i>Taste Profile</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label h5">Preferred Product Types</label>
+                        <div class="taste-preferences">
+                            {% for value, label in product_types %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="preferred_product_types" 
+                                           value="{{ value }}" id="product_{{ value }}"
+                                           {% if value in current_product_types %}checked{% endif %}>
+                                    <label class="form-check-label" for="product_{{ value }}">{{ label }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label h5">Preferred Finish Types</label>
+                        <div class="taste-preferences">
+                            {% for value, label in finish_types %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="preferred_finish_types" 
+                                           value="{{ value }}" id="finish_{{ value }}"
+                                           {% if value in current_finish_types %}checked{% endif %}>
+                                    <label class="form-check-label" for="finish_{{ value }}">{{ label }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label h5">Preferred Colors</label>
+                        <div class="color-preferences">
+                            {% for color in colors %}
+                                <input type="checkbox" name="preferred_colors" value="{{ color.id }}" 
+                                       id="color_{{ color.id }}" style="display: none;"
+                                       {% if taste_profile and color in taste_profile.preferred_colors.all %}checked{% endif %}>
+                                <label for="color_{{ color.id }}" class="color-swatch" 
+                                       style="background-color: {{ color.hex_code }};"
+                                       title="{{ color.name }}"
+                                       {% if taste_profile and color in taste_profile.preferred_colors.all %}data-selected="true"{% endif %}>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Update Taste Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Orders Tab -->
+        <div class="tab-pane fade" id="orders">
+            <div class="profile-section">
+                <h3 class="mb-4"><i class="fas fa-shopping-bag me-3"></i>Recent Orders</h3>
+                {% if user_orders %}
+                    {% for order in user_orders %}
+                        <div class="order-item">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <h6 class="mb-1">Order #{{ order.id }}</h6>
+                                    <small class="text-muted">{{ order.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="badge bg-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>${{ order.total_price }}</strong>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <a href="{% url 'skinly:order_detail' order.id %}" class="btn btn-outline-primary btn-sm">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="text-center mt-4">
+                        <a href="{% url 'skinly:order_list' %}" class="btn btn-primary">View All Orders</a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No orders yet</h5>
+                        <p class="text-muted">Start shopping to see your orders here!</p>
+                        <a href="{% url 'skinly:product_list' %}" class="btn btn-primary">Start Shopping</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Reviews Tab -->
+        <div class="tab-pane fade" id="reviews">
+            <div class="profile-section">
+                <h3 class="mb-4"><i class="fas fa-star me-3"></i>My Reviews</h3>
+                {% if user_reviews %}
+                    {% for review in user_reviews %}
+                        <div class="review-item">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="mb-1">{{ review.product.name }}</h6>
+                                <div class="rating-stars">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="mb-2">{{ review.comment }}</p>
+                            <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No reviews yet</h5>
+                        <p class="text-muted">Purchase products and leave reviews to help other customers!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Coupons Tab -->
+        <div class="tab-pane fade" id="coupons">
+            <div class="profile-section">
+                <h3 class="mb-4"><i class="fas fa-ticket-alt me-3"></i>Available Coupons</h3>
+                {% if available_coupons %}
+                    {% for user_coupon in available_coupons %}
+                        <div class="coupon-card">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h5 class="mb-1">{{ user_coupon.coupon.name }}</h5>
+                                    <p class="mb-2">{{ user_coupon.coupon.description }}</p>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-light text-dark me-2">{{ user_coupon.coupon.code }}</span>
+                                        {% if user_coupon.coupon.discount_type == 'PERCENTAGE' %}
+                                            <span class="h6 mb-0">{{ user_coupon.coupon.discount_value }}% OFF</span>
+                                        {% else %}
+                                            <span class="h6 mb-0">${{ user_coupon.coupon.discount_value }} OFF</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <p class="mb-1"><small>Valid until:</small></p>
+                                    <p class="h6">{{ user_coupon.coupon.valid_until|date:"M d, Y" }}</p>
+                                    {% if user_coupon.coupon.minimum_order_amount > 0 %}
+                                        <small>Min. order: ${{ user_coupon.coupon.minimum_order_amount }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No coupons available</h5>
+                        <p class="text-muted">Check back later for exclusive offers!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Addresses Tab -->
+        <div class="tab-pane fade" id="addresses">
+            <div class="profile-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3><i class="fas fa-map-marker-alt me-3"></i>Shipping Addresses</h3>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                        <i class="fas fa-plus me-2"></i>Add Address
+                    </button>
+                </div>
+                
+                {% if shipping_addresses %}
+                    {% for address in shipping_addresses %}
+                        <div class="address-card {% if address.is_default %}default{% endif %}">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6 class="mb-1">
+                                        {{ address.name }}
+                                        {% if address.is_default %}
+                                            <span class="badge bg-primary ms-2">Default</span>
+                                        {% endif %}
+                                    </h6>
+                                    <p class="mb-1">{{ address.first_name }} {{ address.last_name }}</p>
+                                    <p class="mb-1">{{ address.address_line_1 }}</p>
+                                    {% if address.address_line_2 %}
+                                        <p class="mb-1">{{ address.address_line_2 }}</p>
+                                    {% endif %}
+                                    <p class="mb-1">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
+                                    <p class="mb-0">{{ address.country }}</p>
+                                    {% if address.phone %}
+                                        <p class="mb-0"><small>Phone: {{ address.phone }}</small></p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <button class="btn btn-outline-primary btn-sm me-2">Edit</button>
+                                    {% if not address.is_default %}
+                                        <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No addresses saved</h5>
+                        <p class="text-muted">Add a shipping address for faster checkout!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="addressForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Address Name *</label>
+                                <input type="text" class="form-control" name="address_name" placeholder="e.g., Home, Work" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" name="phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">First Name *</label>
+                                <input type="text" class="form-control" name="address_first_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" name="address_last_name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address Line 1 *</label>
+                        <input type="text" class="form-control" name="address_line_1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address Line 2 (Optional)</label>
+                        <input type="text" class="form-control" name="address_line_2">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">City *</label>
+                                <input type="text" class="form-control" name="city" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">State *</label>
+                                <input type="text" class="form-control" name="state" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Postal Code *</label>
+                                <input type="text" class="form-control" name="postal_code" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_default" id="setDefault">
+                            <label class="form-check-label" for="setDefault">
+                                Set as default address
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="addressForm" class="btn btn-primary">Save Address</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Color swatch selection
+    const colorSwatches = document.querySelectorAll('.color-swatch');
+    colorSwatches.forEach(swatch => {
+        const checkbox = document.querySelector(`#${swatch.getAttribute('for')}`);
+        
+        if (swatch.hasAttribute('data-selected')) {
+            swatch.classList.add('selected');
+        }
+        
+        swatch.addEventListener('click', function() {
+            if (checkbox.checked) {
+                checkbox.checked = false;
+                swatch.classList.remove('selected');
+            } else {
+                checkbox.checked = true;
+                swatch.classList.add('selected');
+            }
+        });
+    });
+    
+    // Taste preference styling
+    const checkboxes = document.querySelectorAll('.taste-preferences input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const parent = this.closest('.form-check');
+            if (this.checked) {
+                parent.style.background = 'var(--color-primary)';
+                parent.style.color = 'var(--warm-brown)';
+            } else {
+                parent.style.background = 'var(--color-sand-light)';
+                parent.style.color = 'inherit';
+            }
+        });
+        
+        // Set initial state
+        if (checkbox.checked) {
+            const parent = checkbox.closest('.form-check');
+            parent.style.background = 'var(--color-primary)';
+            parent.style.color = 'white';
+        }
+    });
+    
+    // Auto-close modal and reset form on successful submission
+    const addressForm = document.getElementById('addressForm');
+    if (addressForm) {
+        addressForm.addEventListener('submit', function(e) {
+            // Form will submit normally, but we'll add a small delay
+            setTimeout(() => {
+                // Close modal after form submission
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addAddressModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                // Reset form
+                addressForm.reset();
+            }, 100);
+        });
+    }
+});
+</script>
+{% endblock %}

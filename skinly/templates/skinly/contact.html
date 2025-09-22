@@ -1,0 +1,207 @@
+{% extends 'skinly/base.html' %}
+
+{% block title %}Contact Us - Skinly{% endblock %}
+
+{% block content %}
+<!-- Contact Hero Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--light-cream) 0%, var(--primary-sand) 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Get in Touch</h1>
+                <p class="lead" style="color: var(--warm-brown);">We're here to help you find your perfect beauty match. Reach out to our team of beauty experts.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-envelope" style="font-size: 5rem; color: var(--primary-gold); opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Location -->
+            <div class="col-md-4">
+                <div class="card border-0 h-100 text-center" style="background: var(--accent-beige);">
+                    <div class="card-body p-4">
+                        <div class="contact-icon mb-3" style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-map-marker-alt" style="color: var(--light-cream); font-size: 2rem;"></i>
+                        </div>
+                        <h4 class="card-title" style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">Visit Us</h4>
+                        <p class="card-text" style="color: var(--warm-brown);">
+                            <strong>Skinly Beauty Store</strong><br>
+                            Calle 10 #43A-30<br>
+                            El Poblado, Medellín<br>
+                            Antioquia, Colombia<br>
+                            050021
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-4">
+                <div class="card border-0 h-100 text-center" style="background: var(--accent-beige);">
+                    <div class="card-body p-4">
+                        <div class="contact-icon mb-3" style="width: 80px; height: 80px; background: var(--warm-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-envelope" style="color: var(--light-cream); font-size: 2rem;"></i>
+                        </div>
+                        <h4 class="card-title" style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">Email Us</h4>
+                        <p class="card-text" style="color: var(--warm-brown);">
+                            <strong>General Inquiries:</strong><br>
+                            <a href="mailto:hello@skinly.co" style="color: var(--primary-gold); text-decoration: none;">hello@skinly.co</a><br><br>
+                            <strong>Customer Support:</strong><br>
+                            <a href="mailto:support@skinly.co" style="color: var(--primary-gold); text-decoration: none;">support@skinly.co</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hours -->
+            <div class="col-md-4">
+                <div class="card border-0 h-100 text-center" style="background: var(--accent-beige);">
+                    <div class="card-body p-4">
+                        <div class="contact-icon mb-3" style="width: 80px; height: 80px; background: var(--muted-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-clock" style="color: var(--light-cream); font-size: 2rem;"></i>
+                        </div>
+                        <h4 class="card-title" style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">Store Hours</h4>
+                        <p class="card-text" style="color: var(--warm-brown);">
+                            <strong>Monday - Friday:</strong><br>
+                            9:00 AM - 8:00 PM<br><br>
+                            <strong>Saturday:</strong><br>
+                            10:00 AM - 6:00 PM<br><br>
+                            <strong>Sunday:</strong><br>
+                            12:00 PM - 5:00 PM
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5" style="background: var(--light-cream);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">How We Can Help</h2>
+            <p class="lead text-muted">Our beauty experts are here to assist you with personalized recommendations</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="service-item text-center">
+                    <div class="service-icon mb-3" style="width: 60px; height: 60px; background: var(--primary-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-palette" style="color: var(--light-cream); font-size: 1.5rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">Color Matching</h5>
+                    <p class="text-muted">Find your perfect foundation and lipstick shades</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-item text-center">
+                    <div class="service-icon mb-3" style="width: 60px; height: 60px; background: var(--warm-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user-friends" style="color: var(--light-cream); font-size: 1.5rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">Personal Consultation</h5>
+                    <p class="text-muted">One-on-one beauty advice tailored to you</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-item text-center">
+                    <div class="service-icon mb-3" style="width: 60px; height: 60px; background: var(--muted-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-graduation-cap" style="color: var(--light-cream); font-size: 1.5rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">Makeup Tutorials</h5>
+                    <p class="text-muted">Learn techniques from our expert makeup artists</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="service-item text-center">
+                    <div class="service-icon mb-3" style="width: 60px; height: 60px; background: var(--dark-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-headset" style="color: var(--light-cream); font-size: 1.5rem;"></i>
+                    </div>
+                    <h5 style="color: var(--text-primary);">24/7 Support</h5>
+                    <p class="text-muted">Get help anytime with our customer service</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Find Us</h2>
+            <p class="lead text-muted">Located in the heart of El Poblado, Medellín's premium shopping district</p>
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="map-placeholder" style="background: var(--accent-beige); height: 400px; border-radius: 15px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary-gold);">
+                    <div class="text-center">
+                        <i class="fas fa-map" style="font-size: 4rem; color: var(--primary-gold); margin-bottom: 1rem;"></i>
+                        <h4 style="color: var(--dark-brown);">Interactive Map</h4>
+                        <p style="color: var(--warm-brown);">Visit us at our beautiful Medellín location</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="ps-md-4">
+                    <h3 style="color: var(--dark-brown); font-family: 'Playfair Display', serif;">Why Visit Our Store?</h3>
+                    <ul class="list-unstyled mt-3">
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle me-3" style="color: var(--primary-gold);"></i>
+                            <strong style="color: var(--text-primary);">Try Before You Buy:</strong> Test all products in our spacious beauty studio
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle me-3" style="color: var(--primary-gold);"></i>
+                            <strong style="color: var(--text-primary);">Expert Staff:</strong> Certified makeup artists and beauty consultants
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle me-3" style="color: var(--primary-gold);"></i>
+                            <strong style="color: var(--text-primary);">Exclusive Products:</strong> Premium brands and limited edition collections
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle me-3" style="color: var(--primary-gold);"></i>
+                            <strong style="color: var(--text-primary);">Personalized Service:</strong> AI-powered recommendations plus human expertise
+                        </li>
+                    </ul>
+                    <a href="{% url 'skinly:product_list' %}" class="btn btn-primary btn-lg mt-3">
+                        <i class="fas fa-shopping-bag me-2"></i>Shop Online Instead
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.contact-icon {
+    transition: all 0.3s ease;
+}
+
+.card:hover .contact-icon {
+    transform: scale(1.1);
+}
+
+.service-icon {
+    transition: all 0.3s ease;
+}
+
+.service-item:hover .service-icon {
+    transform: scale(1.1);
+}
+
+.service-item {
+    transition: all 0.3s ease;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+}
+</style>
+{% endblock %}

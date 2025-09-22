@@ -1,0 +1,321 @@
+{% extends 'skinly/base.html' %}
+
+{% block title %}My Wishlist - Skinly{% endblock %}
+
+{% block content %}
+<!-- Wishlist Header -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--light-cream) 0%, var(--primary-sand) 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">My Wishlist</h1>
+                <p class="lead" style="color: var(--warm-brown);">Your curated collection of beauty favorites and must-haves</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-heart" style="font-size: 5rem; color: var(--primary-gold); opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wishlist Content -->
+<section class="py-5">
+    <div class="container">
+        {% if wishlist_products %}
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h4 style="color: var(--dark-brown);">{{ wishlist_products.count }} item{{ wishlist_products.count|pluralize }} in your wishlist</h4>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-outline-primary" onclick="addAllToCart()" id="addAllBtn">
+                    <i class="fas fa-shopping-cart me-2"></i>Add All to Cart
+                </button>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for product in wishlist_products %}
+            <div class="col-md-6 col-lg-4" id="wishlist-item-{{ product.id }}">
+                <div class="card wishlist-card h-100" style="border: 2px solid var(--border-light);">
+                    <div class="position-relative">
+                        <div class="product-image card-img-top d-flex align-items-center justify-content-center" style="height: 250px; background: linear-gradient(135deg, var(--accent-beige) 0%, var(--primary-sand) 100%);">
+                            <i class="fas fa-image" style="font-size: 3rem; color: var(--text-light);"></i>
+                        </div>
+                        
+                        <!-- Remove from Wishlist Button -->
+                        <button class="btn btn-link position-absolute top-0 end-0 m-2 text-danger" 
+                                onclick="removeFromWishlist({{ product.id }})"
+                                style="background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        
+                        <!-- Stock Status Badge -->
+                        {% if product.stock_quantity > 0 %}
+                            <span class="badge position-absolute top-0 start-0 m-2" style="background: var(--primary-gold); color: var(--dark-brown);">
+                                In Stock ({{ product.stock_quantity }})
+                            </span>
+                        {% else %}
+                            <span class="badge position-absolute top-0 start-0 m-2 bg-danger">
+                                Out of Stock
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title mb-2" style="color: var(--text-primary);">{{ product.name }}</h5>
+                        <p class="text-muted mb-2">{{ product.brand.name }}</p>
+                        <p class="text-muted small mb-3">{{ product.get_product_type_display }}</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="price h4" style="color: var(--primary-gold);">${{ product.price }}</span>
+                            <div class="rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.rating %}
+                                        <i class="fas fa-star" style="color: var(--primary-gold);"></i>
+                                    {% else %}
+                                        <i class="far fa-star" style="color: var(--primary-gold);"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-1 text-muted">({{ product.rating|floatformat:1 }})</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            {% if product.stock_quantity > 0 %}
+                                <form method="post" action="{% url 'skinly:add_to_cart' product.id %}" class="add-to-cart-form">
+                                    {% csrf_token %}
+                                    <div class="input-group mb-2">
+                                        <select name="quantity" class="form-select" style="max-width: 80px;">
+                                            {% for i in "123456789"|make_list %}
+                                                {% if forloop.counter <= product.stock_quantity and forloop.counter <= 9 %}
+                                                    <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-primary flex-fill">
+                                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                        </button>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <button class="btn btn-secondary" disabled>
+                                    <i class="fas fa-exclamation-triangle me-2"></i>Out of Stock
+                                </button>
+                            {% endif %}
+                            
+                            <a href="{% url 'skinly:product_detail' product.id %}" class="btn btn-outline-primary">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Continue Shopping -->
+        <div class="text-center mt-5">
+            <a href="{% url 'skinly:product_list' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+            </a>
+        </div>
+        
+        {% else %}
+        <!-- Empty Wishlist -->
+        <div class="text-center py-5">
+            <i class="fas fa-heart-broken" style="font-size: 5rem; color: var(--text-light); margin-bottom: 2rem;"></i>
+            <h3 style="color: var(--dark-brown);">Your wishlist is empty</h3>
+            <p class="lead text-muted mb-4">Discover amazing beauty products and add them to your wishlist</p>
+            <a href="{% url 'skinly:product_list' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-palette me-2"></i>Start Shopping
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Add CSRF token for AJAX requests -->
+{% csrf_token %}
+
+<style>
+.wishlist-card {
+    transition: all 0.3s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(139, 105, 20, 0.15);
+    border-color: var(--primary-gold);
+}
+
+.add-to-cart-form {
+    margin: 0;
+}
+
+.product-image {
+    transition: all 0.3s ease;
+}
+
+.wishlist-card:hover .product-image {
+    transform: scale(1.02);
+}
+</style>
+
+<script>
+// Remove item from wishlist
+function removeFromWishlist(productId) {
+    fetch(`{% url 'skinly:toggle_wishlist' 0 %}`.replace('0', productId), {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.action === 'removed') {
+            // Remove the item from the page with animation
+            const item = document.getElementById(`wishlist-item-${productId}`);
+            item.style.transition = 'all 0.3s ease';
+            item.style.transform = 'scale(0.8)';
+            item.style.opacity = '0';
+            
+            setTimeout(() => {
+                item.remove();
+                // Check if wishlist is now empty
+                const remainingItems = document.querySelectorAll('[id^="wishlist-item-"]');
+                if (remainingItems.length === 0) {
+                    location.reload(); // Reload to show empty state
+                } else {
+                    // Update count
+                    updateWishlistCount();
+                }
+            }, 300);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error removing item from wishlist. Please try again.');
+    });
+}
+
+// Update wishlist count display
+function updateWishlistCount() {
+    const items = document.querySelectorAll('[id^="wishlist-item-"]');
+    const count = items.length;
+    const countText = document.querySelector('h4');
+    if (countText) {
+        countText.textContent = `${count} item${count !== 1 ? 's' : ''} in your wishlist`;
+    }
+}
+
+// Add all items to cart
+function addAllToCart() {
+    const forms = document.querySelectorAll('.add-to-cart-form');
+    const addAllBtn = document.getElementById('addAllBtn');
+    
+    if (forms.length === 0) {
+        alert('No items available to add to cart.');
+        return;
+    }
+    
+    addAllBtn.disabled = true;
+    addAllBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding to Cart...';
+    
+    let completedRequests = 0;
+    let errors = 0;
+    
+    forms.forEach(form => {
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            completedRequests++;
+            if (!response.ok) {
+                errors++;
+            }
+            
+            // Check if all requests completed
+            if (completedRequests === forms.length) {
+                addAllBtn.disabled = false;
+                addAllBtn.innerHTML = '<i class="fas fa-shopping-cart me-2"></i>Add All to Cart';
+                
+                if (errors === 0) {
+                    alert('All items added to cart successfully!');
+                    // Optionally redirect to cart
+                    // window.location.href = "{% url 'skinly:cart' %}";
+                } else {
+                    alert(`${forms.length - errors} items added to cart. ${errors} items could not be added.`);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            completedRequests++;
+            errors++;
+            
+            if (completedRequests === forms.length) {
+                addAllBtn.disabled = false;
+                addAllBtn.innerHTML = '<i class="fas fa-shopping-cart me-2"></i>Add All to Cart';
+                alert('Some items could not be added to cart. Please try again.');
+            }
+        });
+    });
+}
+
+// Handle individual add to cart forms
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('.add-to-cart-form');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+            
+            const formData = new FormData(form);
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    button.innerHTML = '<i class="fas fa-check me-2"></i>Added!';
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-success');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove('btn-success');
+                        button.classList.add('btn-primary');
+                        button.disabled = false;
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to add to cart');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                button.innerHTML = originalText;
+                button.disabled = false;
+                alert('Error adding item to cart. Please try again.');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
