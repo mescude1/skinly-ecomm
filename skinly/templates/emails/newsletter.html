@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{{ campaign.subject }}</title>
+    <style type="text/css">
+        /* Email styles for better compatibility */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FDF5E6;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+        }
+        .header {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #FDF5E6;
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 30px 20px;
+        }
+        .hero-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .hero-title {
+            color: #654321;
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .hero-text {
+            color: #6B4423;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            color: #FDF5E6 !important;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .product-grid {
+            margin: 30px 0;
+        }
+        .product-row {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .product-cell {
+            width: 50%;
+            padding: 10px;
+            vertical-align: top;
+        }
+        .product-card {
+            background: #FEFCF7;
+            border: 1px solid #E6D7B8;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .product-image {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #F5F5DC 0%, #F4E4BC 100%);
+            border-radius: 8px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8B6914;
+            font-size: 24px;
+        }
+        .product-name {
+            color: #3C2414;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .product-brand {
+            color: #6B4423;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .product-price {
+            color: #D4AF37;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .product-button {
+            background: #D4AF37;
+            color: #FDF5E6 !important;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .tips-section {
+            background: #F4E4BC;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        .tips-title {
+            color: #654321;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .tip-item {
+            color: #6B4423;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .tip-item:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .footer {
+            background: #654321;
+            color: #F5F5DC;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .footer a {
+            color: #D4AF37 !important;
+            text-decoration: none;
+        }
+        .social-links {
+            margin: 15px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #D4AF37 !important;
+            font-size: 18px;
+        }
+        @media only screen and (max-width: 600px) {
+            .product-cell {
+                width: 100% !important;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table class="container" cellpadding="0" cellspacing="0">
+        <!-- Header -->
+        <tr>
+            <td class="header">
+                <h1>✨ Skinly Beauty</h1>
+                <p style="color: #FDF5E6; margin: 5px 0 0 0; font-size: 14px;">Premium Makeup & Beauty</p>
+            </td>
+        </tr>
+        
+        <!-- Main Content -->
+        <tr>
+            <td class="content">
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <h2 class="hero-title">{{ campaign.title }}</h2>
+                    <p class="hero-text">{{ campaign.content|default:"Discover the latest beauty trends and exclusive offers curated just for you. Transform your beauty routine with our premium collection." }}</p>
+                    <a href="https://skinly.co/products/" class="cta-button">Shop New Arrivals</a>
+                </div>
+                
+                <!-- Featured Products -->
+                {% if campaign.featured_products.all %}
+                <div class="product-grid">
+                    <h3 style="color: #654321; text-align: center; margin-bottom: 20px;">This Week's Favorites</h3>
+                    
+                    {% for product in campaign.featured_products.all %}
+                    {% if forloop.counter0|divisibleby:2 %}
+                    <table class="product-row" cellpadding="0" cellspacing="0">
+                        <tr>
+                    {% endif %}
+                            <td class="product-cell">
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <span>💄</span>
+                                    </div>
+                                    <div class="product-name">{{ product.name }}</div>
+                                    <div class="product-brand">{{ product.brand.name }}</div>
+                                    <div class="product-price">${{ product.price }}</div>
+                                    <a href="https://skinly.co/products/{{ product.id }}/" class="product-button">View Details</a>
+                                </div>
+                            </td>
+                    {% if forloop.counter|divisibleby:2 or forloop.last %}
+                        </tr>
+                    </table>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Beauty Tips Section -->
+                <div class="tips-section">
+                    <h3 class="tips-title">Beauty Tips of the Week</h3>
+                    <div class="tip-item">Start with a good skincare routine - clean, hydrated skin is the best foundation for any makeup look.</div>
+                    <div class="tip-item">Use a primer to help your makeup last longer and create a smooth base for application.</div>
+                    <div class="tip-item">Don't forget to clean your makeup brushes regularly for better application and healthier skin.</div>
+                    <div class="tip-item">Experiment with one new technique or product each week to expand your beauty skills.</div>
+                </div>
+                
+                <!-- Call to Action -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://skinly.co/products/" class="cta-button">Explore Full Collection</a>
+                </div>
+            </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+            <td class="footer">
+                <div class="social-links">
+                    <a href="#">📘</a>
+                    <a href="#">📷</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📺</a>
+                </div>
+                
+                <p><strong>Skinly Beauty</strong><br>
+                Calle 10 #43A-30, El Poblado<br>
+                Medellín, Antioquia, Colombia</p>
+                
+                <p>
+                    <a href="https://skinly.co/contact/">Contact Us</a> | 
+                    <a href="https://skinly.co/shipping/">Shipping Info</a> | 
+                    <a href="https://skinly.co/returns/">Returns</a>
+                </p>
+                
+                <p style="margin-top: 20px; font-size: 11px; color: #A0522D;">
+                    You're receiving this email because you subscribed to our newsletter.<br>
+                    <a href="#" style="color: #D4AF37;">Unsubscribe</a> | <a href="#" style="color: #D4AF37;">Update Preferences</a>
+                </p>
+                
+                <p style="margin-top: 15px; font-size: 10px; color: #8B6914;">
+                    © 2024 Skinly. All rights reserved.
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

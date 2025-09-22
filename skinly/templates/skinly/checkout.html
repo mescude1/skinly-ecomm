@@ -1,0 +1,485 @@
+{% extends 'skinly/base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Skinly{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-header {
+        background: linear-gradient(135deg, var(--primary-sand), var(--accent-beige));
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .checkout-header h1 {
+        color: var(--primary-brown);
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 0.5rem;
+    }
+    
+    .checkout-section {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .checkout-section h3 {
+        color: var(--primary-brown);
+        border-bottom: 2px solid var(--primary-gold);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .order-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .order-item:last-child {
+        border-bottom: none;
+    }
+    
+    .item-image {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--accent-beige), var(--primary-sand));
+        border-radius: 10px;
+        margin-right: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-brown);
+    }
+    
+    .item-details {
+        flex: 1;
+    }
+    
+    .item-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .item-info {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .item-price {
+        text-align: right;
+        min-width: 100px;
+    }
+    
+    .shipping-address {
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .shipping-address:hover {
+        border-color: var(--primary-gold);
+        background: var(--primary-sand);
+    }
+    
+    .shipping-address.selected {
+        border-color: var(--primary-gold);
+        background: var(--primary-sand);
+    }
+    
+    .payment-method {
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .payment-method:hover {
+        border-color: var(--primary-gold);
+        background: var(--primary-sand);
+    }
+    
+    .payment-method.selected {
+        border-color: var(--primary-gold);
+        background: var(--primary-sand);
+    }
+    
+    .payment-method.coming-soon {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    .payment-method.coming-soon:hover {
+        border-color: var(--border-light);
+        background: white;
+    }
+    
+    .coming-soon-badge {
+        background: var(--muted-gold);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .order-summary {
+        background: var(--accent-beige);
+        border-radius: 10px;
+        padding: 1.5rem;
+        position: sticky;
+        top: 2rem;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+    
+    .summary-row.total {
+        border-top: 2px solid var(--primary-gold);
+        margin-top: 1rem;
+        padding-top: 1rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+    
+    .btn-place-order {
+        background: linear-gradient(135deg, var(--primary-gold), var(--muted-gold));
+        border: none;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-place-order:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        color: white;
+    }
+    
+    .btn-place-order:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 1rem 0;
+    }
+    
+    .breadcrumb-item a {
+        color: var(--muted-gold);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--text-primary);
+    }
+    
+    .add-address-btn {
+        border: 2px dashed var(--primary-gold);
+        background: transparent;
+        color: var(--primary-gold);
+        border-radius: 10px;
+        padding: 1rem;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .add-address-btn:hover {
+        background: var(--primary-sand);
+        color: var(--primary-brown);
+    }
+    
+    .secure-checkout {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: 1rem;
+    }
+    
+    .secure-checkout i {
+        color: var(--primary-gold);
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'skinly:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'skinly:cart' %}">Cart</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+        </ol>
+    </nav>
+    
+    <!-- Checkout Header -->
+    <div class="checkout-header">
+        <h1><i class="fas fa-credit-card me-3"></i>Secure Checkout</h1>
+        <p class="mb-0">Complete your order safely and securely</p>
+    </div>
+    
+    <form method="post" id="checkout-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Shipping Address Section -->
+                <div class="checkout-section">
+                    <h3><i class="fas fa-truck me-2"></i>Shipping Address</h3>
+                    {% if shipping_addresses %}
+                        {% for address in shipping_addresses %}
+                            <div class="shipping-address" data-address-id="{{ address.id }}">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="shipping_address" 
+                                           id="address-{{ address.id }}" value="{{ address.id }}" 
+                                           {% if forloop.first %}checked{% endif %}>
+                                    <label class="form-check-label w-100" for="address-{{ address.id }}">
+                                        <div class="fw-bold">{{ address.first_name }} {{ address.last_name }}</div>
+                                        <div>{{ address.address_line_1 }}</div>
+                                        {% if address.address_line_2 %}
+                                            <div>{{ address.address_line_2 }}</div>
+                                        {% endif %}
+                                        <div>{{ address.city }}, {{ address.state }} {{ address.postal_code }}</div>
+                                        {% if address.phone %}
+                                            <div class="text-muted">{{ address.phone }}</div>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+                            <h5>No shipping addresses found</h5>
+                            <p class="text-muted">Please add a shipping address to continue</p>
+                        </div>
+                    {% endif %}
+                    
+                    <button type="button" class="add-address-btn mt-3">
+                        <i class="fas fa-plus me-2"></i>Add New Address
+                    </button>
+                </div>
+                
+                <!-- Payment Method Section -->
+                <div class="checkout-section">
+                    <h3><i class="fas fa-credit-card me-2"></i>Payment Method</h3>
+                    
+                    <!-- Cash on Delivery -->
+                    <div class="payment-method selected" data-payment="cod">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" 
+                                   id="payment-cod" value="cod" checked>
+                            <label class="form-check-label" for="payment-cod">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-money-bill-wave fa-2x me-3" style="color: var(--primary-gold);"></i>
+                                    <div>
+                                        <div class="fw-bold">Cash on Delivery</div>
+                                        <div class="text-muted">Pay when your order arrives</div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Credit Card (Coming Soon) -->
+                    <div class="payment-method coming-soon" data-payment="card">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-credit-card fa-2x me-3" style="color: var(--text-secondary);"></i>
+                                <div>
+                                    <div class="fw-bold">Credit/Debit Card</div>
+                                    <div class="text-muted">Visa, Mastercard, American Express</div>
+                                </div>
+                            </div>
+                            <span class="coming-soon-badge">Coming Soon</span>
+                        </div>
+                    </div>
+                    
+                    <!-- PayPal (Coming Soon) -->
+                    <div class="payment-method coming-soon" data-payment="paypal">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <i class="fab fa-paypal fa-2x me-3" style="color: var(--text-secondary);"></i>
+                                <div>
+                                    <div class="fw-bold">PayPal</div>
+                                    <div class="text-muted">Pay with your PayPal account</div>
+                                </div>
+                            </div>
+                            <span class="coming-soon-badge">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Items Section -->
+                <div class="checkout-section">
+                    <h3><i class="fas fa-box me-2"></i>Order Items ({{ cart_items.count }})</h3>
+                    {% for item in cart_items %}
+                        <div class="order-item">
+                            <div class="item-image">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            <div class="item-details">
+                                <div class="item-name">{{ item.product.name }}</div>
+                                <div class="item-info">
+                                    {{ item.product.brand.name }} • Qty: {{ item.quantity }}
+                                </div>
+                            </div>
+                            <div class="item-price">
+                                <div class="fw-bold">${{ item.product.price }}</div>
+                                <div class="text-muted">Total: ${{ item.product.price|floatformat:2 }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Order Summary -->
+                <div class="checkout-section">
+                    <h3><i class="fas fa-calculator me-2"></i>Order Summary</h3>
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>Subtotal ({{ cart_items.count }} item{{ cart_items.count|pluralize }})</span>
+                            <span>${{ subtotal|floatformat:2 }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span>{% if shipping == 0 %}Free{% else %}_${{ shipping|floatformat:2 }}{% endif %}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax</span>
+                            <span>${{ tax|floatformat:2 }}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span style="color: var(--primary-gold);">${{ total|floatformat:2 }}</span>
+                        </div>
+                        
+                        <button type="submit" class="btn-place-order mt-3" 
+                                {% if not shipping_addresses %}disabled{% endif %}>
+                            <i class="fas fa-shopping-bag me-2"></i>Place Order
+                        </button>
+                        
+                        <div class="secure-checkout">
+                            <i class="fas fa-lock"></i>Your payment information is secure and encrypted
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trust Badges -->
+                <div class="text-center mt-3">
+                    <div class="d-flex justify-content-center gap-3 mb-2">
+                        <i class="fas fa-shield-alt fa-2x" style="color: var(--primary-gold);"></i>
+                        <i class="fas fa-truck fa-2x" style="color: var(--primary-gold);"></i>
+                        <i class="fas fa-undo fa-2x" style="color: var(--primary-gold);"></i>
+                    </div>
+                    <small class="text-muted">Secure Payment • Fast Shipping • Easy Returns</small>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle shipping address selection
+    const addressCards = document.querySelectorAll('.shipping-address');
+    const addressRadios = document.querySelectorAll('input[name="shipping_address"]');
+    
+    addressCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const addressId = this.dataset.addressId;
+            const radio = document.getElementById(`address-${addressId}`);
+            
+            // Remove selected class from all cards
+            addressCards.forEach(c => c.classList.remove('selected'));
+            
+            // Add selected class to clicked card
+            this.classList.add('selected');
+            
+            // Check the radio button
+            radio.checked = true;
+            
+            // Enable place order button
+            document.querySelector('.btn-place-order').disabled = false;
+        });
+    });
+    
+    // Handle payment method selection
+    const paymentMethods = document.querySelectorAll('.payment-method:not(.coming-soon)');
+    
+    paymentMethods.forEach(method => {
+        method.addEventListener('click', function() {
+            const paymentType = this.dataset.payment;
+            const radio = document.getElementById(`payment-${paymentType}`);
+            
+            // Remove selected class from all methods
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+            
+            // Add selected class to clicked method
+            this.classList.add('selected');
+            
+            // Check the radio button
+            radio.checked = true;
+        });
+    });
+    
+    // Form validation
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        const selectedAddress = document.querySelector('input[name="shipping_address"]:checked');
+        const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+        
+        if (!selectedAddress) {
+            e.preventDefault();
+            alert('Please select a shipping address');
+            return;
+        }
+        
+        if (!selectedPayment) {
+            e.preventDefault();
+            alert('Please select a payment method');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = document.querySelector('.btn-place-order');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing Order...';
+        submitBtn.disabled = true;
+    });
+    
+    // Add address button functionality
+    document.querySelector('.add-address-btn').addEventListener('click', function() {
+        // Redirect to profile page to add address
+        window.location.href = '{% url "skinly:profile" %}#addresses';
+    });
+});
+</script>
+{% endblock %}
