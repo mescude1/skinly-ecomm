@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Products"
+msgstr "Products"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Orders"
+msgstr "Orders"
+
+msgid "Wishlist"
+msgstr "Wishlist"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Premium makeup and beauty products curated for your unique style and skin needs."
+msgstr "Premium makeup and beauty products curated for your unique style and skin needs."
+
+msgid "Shop"
+msgstr "Shop"
+
+msgid "All Products"
+msgstr "All Products"
+
+msgid "Foundation"
+msgstr "Foundation"
+
+msgid "Lipstick"
+msgstr "Lipstick"
+
+msgid "Mask"
+msgstr "Mask"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Contact Us"
+msgstr "Contact Us"
+
+msgid "Shipping Info"
+msgstr "Shipping Info"
+
+msgid "Returns"
+msgstr "Returns"
+
+
+msgid "Newsletter"
+msgstr "Newsletter"
+
+msgid "Get the latest beauty tips and product updates"
+msgstr "Get the latest beauty tips and product updates"
+
+msgid "Subscribe"
+msgstr "Subscribe"
+
+msgid "All rights reserved."
+msgstr "All rights reserved."
+
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+msgid "Terms of Service"
+msgstr "Terms of Service"
+
+msgid "Contact"
+msgstr "Contact"
