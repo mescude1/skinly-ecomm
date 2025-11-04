@@ -689,3 +689,44 @@ def logout_view(request):
         logout(request)
         messages.success(request, 'You have been successfully logged out.')
     return redirect('skinly:home')
+
+# ==============================
+# 🌐 API PUBLICA (para otros equipos)
+# ==============================
+from django.urls import reverse
+
+def products_api(request):
+    """Devuelve una lista de productos disponibles en formato JSON"""
+    products = Product.objects.filter(stock_quantity__gt=0)
+    data = []
+
+    for product in products:
+        data.append({
+            "id": product.id,
+            "name": product.name,
+            "price": float(product.price),
+            "stock": product.stock_quantity,
+            "image": request.build_absolute_uri("/static/images/placeholder.jpg"),
+            "detail_url": request.build_absolute_uri(reverse("skinly:product_detail", args=[product.id])),
+        })
+
+    return JsonResponse({"products": data})
+
+import requests
+
+def allied_products_view(request):
+    """Consume la API de otro equipo y muestra sus productos"""
+    api_url = "https://ejemplo-del-otro-equipo.com/api/products/"  # 🔁 Cambiá esta URL por la del otro equipo
+    products = []
+
+    try:
+        response = requests.get(api_url, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            products = data.get("products", [])
+        else:
+            print(f"Error {response.status_code} al consumir la API aliada.")
+    except Exception as e:
+        print(f"Error al conectar con la API aliada: {e}")
+
+    return render(request, "skinly/allied_products.html", {"products": products})

@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Products"
+msgstr "Productos"
+
+msgid "Contact"
+msgstr "Contacto"
+
+msgid "Orders"
+msgstr "Pedidos"
+
+msgid "Wishlist"
+msgstr "Lista de deseos"
+
+msgid "Login"
+msgstr "Iniciar sesión"
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+msgid "Premium makeup and beauty products curated for your unique style and skin needs."
+msgstr "Maquillaje y productos de belleza premium seleccionados para tu estilo y tipo de piel únicos."
+
+msgid "Shop"
+msgstr "Tienda"
+
+msgid "All Products"
+msgstr "Todos los productos"
+
+msgid "Foundation"
+msgstr "Base"
+
+msgid "Lipstick"
+msgstr "Labial"
+
+msgid "Mask"
+msgstr "Máscara"
+
+msgid "Support"
+msgstr "Soporte"
+
+msgid "Contact Us"
+msgstr "Contáctanos"
+
+msgid "Shipping Info"
+msgstr "Información de envío"
+
+msgid "Returns"
+msgstr "Devoluciones"
+
+
+msgid "Newsletter"
+msgstr "Boletín"
+
+msgid "Get the latest beauty tips and product updates"
+msgstr "Recibe los últimos consejos de belleza y novedades"
+
+msgid "Subscribe"
+msgstr "Suscribirse"
+
+msgid "All rights reserved."
+msgstr "Todos los derechos reservados."
+
+msgid "Privacy Policy"
+msgstr "Política de privacidad"
+
+msgid "Terms of Service"
+msgstr "Términos de servicio"
+
+msgid "Contact"
+msgstr "Contacto"

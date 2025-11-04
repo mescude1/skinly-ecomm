@@ -350,6 +350,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    {% load i18n %}
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
@@ -366,28 +367,28 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'skinly:home' %}">
-                            <i class="fas fa-home me-1"></i>Home
+                            <i class="fas fa-home me-1"></i>{% trans "Home" %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'skinly:product_list' %}">
-                            <i class="fas fa-palette me-1"></i>Products
+                            <i class="fas fa-palette me-1"></i>{% trans "Products" %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'skinly:contact' %}">
-                            <i class="fas fa-envelope me-1"></i>Contact
+                            <i class="fas fa-envelope me-1"></i>{% trans "Contact" %}
                         </a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'skinly:order_list' %}">
-                            <i class="fas fa-shopping-bag me-1"></i>Orders
+                            <i class="fas fa-shopping-bag me-1"></i>{% trans "Orders" %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="{% url 'skinly:wishlist' %}">
-                            <i class="fas fa-heart me-1"></i>Wishlist
+                            <i class="fas fa-heart me-1"></i>{% trans "Wishlist" %}
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background: var(--primary-gold); color: var(--dark-brown);" id="wishlist-count">
                                 {{ user.wishlist.count }}
                                 <span class="visually-hidden">items in wishlist</span>
@@ -405,14 +406,14 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'skinly:profile' %}">
-                                <i class="fas fa-user-cog me-2"></i>Profile
+                                <i class="fas fa-user-cog me-2"></i>{% trans "Profile" %}
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'skinly:order_list' %}">
                                 <i class="fas fa-shopping-bag me-2"></i>Orders
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'skinly:logout' %}">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                <i class="fas fa-sign-out-alt me-2"></i>{% trans "Logout" %}
                             </a></li>
                         </ul>
                     </li>
@@ -434,10 +435,25 @@
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'skinly:login' %}">
-                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                            <i class="fas fa-sign-in-alt me-1"></i>{% trans "Login" %}
                         </a>
                     </li>
                     {% endif %}
+                    <!-- Selector de idioma -->
+                    <li class="nav-item d-flex align-items-center ms-2">
+                        <form action="{% url 'set_language' %}" method="post" class="d-flex">
+                            {% csrf_token %}
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            <select name="language" onchange="this.form.submit()" class="form-select form-select-sm bg-light border-0">
+                                {% for lang in LANGUAGES %}
+                                    <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                                        {{ lang.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -466,7 +482,7 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5><i class="fas fa-sparkles me-2"></i>Skinly</h5>
-                    <p class="mb-3">Premium makeup and beauty products curated for your unique style and skin needs.</p>
+                   <p class="mb-3">{% trans "Premium makeup and beauty products curated for your unique style and skin needs." %}</p>
                     <div class="social-links">
                         <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
@@ -475,31 +491,31 @@
                     </div>
                 </div>
                 <div class="col-md-2 mb-4">
-                    <h5>Shop</h5>
+                    <h5>{% trans "Shop" %}</h5>
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'skinly:product_list' %}">All Products</a></li>
-                        <li><a href="{% url 'skinly:product_list' %}?product_type=FOUNDATION">Foundation</a></li>
-                        <li><a href="{% url 'skinly:product_list' %}?product_type=LIPSTICK">Lipstick</a></li>
-                        <li><a href="{% url 'skinly:product_list' %}?product_type=MASCARA">Mascara</a></li>
+                         <li><a href="{% url 'skinly:product_list' %}">{% trans "All Products" %}</a></li>
+                        <li><a href="{% url 'skinly:product_list' %}?product_type=FOUNDATION">{% trans "Foundation" %}</a></li>
+                        <li><a href="{% url 'skinly:product_list' %}?product_type=LIPSTICK">{% trans "Lipstick" %}</a></li>
+                        <li><a href="{% url 'skinly:product_list' %}?product_type=MASCARA">{% trans "Mask" %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-2 mb-4">
-                    <h5>Support</h5>
+                    <h5>{% trans "Support" %}</h5>
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'skinly:contact' %}">Contact Us</a></li>
-                        <li><a href="{% url 'skinly:shipping_info' %}">Shipping Info</a></li>
-                        <li><a href="{% url 'skinly:returns' %}">Returns</a></li>
+                        <li><a href="{% url 'skinly:contact' %}">{% trans "Contact Us" %}</a></li>
+                        <li><a href="{% url 'skinly:shipping_info' %}">{% trans "Shipping Info" %}</a></li>
+                        <li><a href="{% url 'skinly:returns' %}">{% trans "Returns" %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <h5>Newsletter</h5>
-                    <p>Get the latest beauty tips and product updates</p>
+                    <h5>{% trans "Newsletter" %}</h5>
+                    <p>{% trans "Get the latest beauty tips and product updates" %}</p>
                     <form method="post" action="{% url 'skinly:newsletter_subscribe' %}" id="newsletter-form">
                         {% csrf_token %}
                         <div class="input-group">
                             <input type="email" name="email" class="form-control" placeholder="Your email" required>
                             <button class="btn btn-primary" type="submit">
-                                <i class="fas fa-envelope me-2"></i>Subscribe
+                                <i class="fas fa-envelope me-2"></i>{% trans "Subscribe" %}
                             </button>
                         </div>
                     </form>
@@ -511,9 +527,9 @@
                     <p class="mb-0">&copy; 2025 Skinly. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="{% url 'skinly:privacy_policy' %}" class="me-3">Privacy Policy</a>
-                    <a href="{% url 'skinly:terms_of_service' %}" class="me-3">Terms of Service</a>
-                    <a href="{% url 'skinly:contact' %}">Contact</a>
+                    <a href="{% url 'skinly:privacy_policy' %}" class="me-3">{% trans "Privacy Policy" %}</a>
+                    <a href="{% url 'skinly:terms_of_service' %}" class="me-3">{% trans "Terms of Service" %}</a>
+                    <a href="{% url 'skinly:contact' %}">{% trans "Contact" %}</a>
                 </div>
             </div>
         </div>
