@@ -154,3 +154,25 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 import os
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDxJncA88XQmHFSMvfZ11u3j4jomEJ_CDA")
+
+import os
+
+DEBUG = False  # Para producción
+# Cloud Run usa una URL dinámica, así que permitimos todo host (seguro para pruebas)
+ALLOWED_HOSTS = ["*"]
+
+# CSRF para Cloud Run
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{os.environ.get('CLOUD_RUN_SERVICE_URL', '')}",
+]
+
+# Static files para producción
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Google Gemini (mantén esto como estaba)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDxJncA88XQmHFSMvfZ11u3j4jomEJ_CDA")
