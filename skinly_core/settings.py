@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "whitenoise.runserver_nostatic",
     "skinly"
 ]
 
@@ -45,6 +46,7 @@ AUTH_USER_MODEL = "skinly.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware", 
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -176,3 +178,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Google Gemini (mantén esto como estaba)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDxJncA88XQmHFSMvfZ11u3j4jomEJ_CDA")
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
