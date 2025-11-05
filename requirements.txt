@@ -1,1 +1,6 @@
-Django
+﻿Django>=4.2,<5.0
+gunicorn
+whitenoise
+pillow
+requests
+psycopg2-binary
