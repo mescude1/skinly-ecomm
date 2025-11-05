@@ -57,7 +57,6 @@ msgstr "Información de envío"
 msgid "Returns"
 msgstr "Devoluciones"
 
-
 msgid "Newsletter"
 msgstr "Boletín"
 
@@ -76,5 +75,80 @@ msgstr "Política de privacidad"
 msgid "Terms of Service"
 msgstr "Términos de servicio"
 
-msgid "Contact"
-msgstr "Contacto"
+msgid "Discover Your Perfect Look"
+msgstr "Descrubre tu look perfecto"
+
+msgid "Premium makeup curated for your unique beauty. Get personalized recommendations based on your skin tone, type, and style preferences."
+msgstr "Maquillaje premium seleccionado para resaltar tu belleza única. Obtén recomendaciones personalizadas según tu tono, tipo de piel y estilo."
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "Shop Now"
+msgstr "Comprar ahora"
+
+msgid "Get Personalized"
+msgstr "Obtener Personalización"
+
+msgid "Shop by Category"
+msgstr "Compra por categoria"
+
+msgid "Explore our curated collection of premium beauty products"
+msgstr "Explora nuestra colección seleccionada de productos de belleza premium"
+
+msgid "Perfect base for every skin tone"
+msgstr "Base perfecta para cada tono de piel"
+
+msgid "Bold colors for every occasion"
+msgstr "Colores intensos para cada ocasión"
+
+msgid "Eyeshadow"
+msgstr "Sombra de ojos"
+
+msgid "Create stunning eye looks"
+msgstr "Crea looks de ojos impresionantes"
+
+msgid "Featured Products"
+msgstr "Productos Destacados"
+
+msgid "Handpicked favorites from our collection"
+msgstr "Favoritos seleccionados de nuestra colección"
+
+msgid "Check back soon for amazing makeup products!"
+msgstr "¡Vuelve pronto para descubrir increíbles productos de maquillaje!"
+
+msgid "View All Products"
+msgstr "Ver todos los productos"
+
+msgid "Recommended for You"
+msgstr "Recomendado para ti"
+
+msgid "Based on your preferences and skin profile"
+msgstr "Basado en tus preferencias y perfil de piel"
+
+msgid "Recommended"
+msgstr "Recomendado"
+
+msgid "Free Shipping"
+msgstr "Envío gratis"
+
+msgid "On orders over $50"
+msgstr "En pedidos superiores a $50"
+
+msgid "Personal Recommendations"
+msgstr "Recomendaciones personalizadas"
+
+msgid "AI-powered beauty matching"
+msgstr "Coincidencia de belleza impulsada por IA"
+
+msgid "Quality Guarantee"
+msgstr "Garantía de calidad"
+
+msgid "30-day return policy"
+msgstr "Política de devolución de 30 días"
+
+msgid "Expert Support"
+msgstr "Soporte experto"
+
+msgid "Beauty consultants available 24/7"
+msgstr "Consultores de belleza disponibles las 24 horas, los 7 días de la semana"

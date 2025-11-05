@@ -44,6 +44,8 @@ class Product(models.Model):
     stock_quantity = models.PositiveIntegerField(default=0)
     rating = models.FloatField(default=0.0)
 
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
+
     class Meta:
         verbose_name = "Product"
         verbose_name_plural = "Products"

@@ -730,3 +730,29 @@ def allied_products_view(request):
         print(f"Error al conectar con la API aliada: {e}")
 
     return render(request, "skinly/allied_products.html", {"products": products})
+
+# ===========================================
+# 🌸 Chat Asesor de Belleza (Gemini)
+# ===========================================
+
+from django.http import JsonResponse
+from django.conf import settings
+import google.generativeai as genai
+
+def beauty_assistant(request):
+    query = request.GET.get("q", "Recomienda productos de maquillaje para piel mixta")
+
+    # Configurar la API de Gemini
+    genai.configure(api_key=settings.GEMINI_API_KEY)
+
+    # Crear el modelo correcto (el que sí está disponible)
+    model = genai.GenerativeModel("models/gemini-2.5-flash")
+
+    # Generar la respuesta
+    response = model.generate_content(query)
+
+    # Retornar la respuesta en formato JSON
+    return JsonResponse({
+        "query": query,
+        "response": response.text
+    })

@@ -1,5 +1,7 @@
 {% extends 'skinly/base.html' %}
 
+{% load i18n %}
+
 {% block title %}Skinly - Premium Makeup & Beauty{% endblock %}
 
 {% block content %}
@@ -22,8 +24,11 @@
     <div class="container hero-container">
         <div class="row align-items-center min-vh-100">
             <div class="col-lg-8 hero-content">
-                <h1 class="hero-title slide-up">Discover Your Perfect Look</h1>
-                <p class="hero-subtitle slide-up">Premium makeup curated for your unique beauty. Get personalized recommendations based on your skin tone, type, and style preferences.</p>
+                <h1 class="hero-title slide-up">{% trans "Discover Your Perfect Look" %}</h1>
+                <p class="hero-subtitle slide-up">
+                    {% trans "Premium makeup curated for your unique beauty. Get personalized recommendations based on your skin tone, type, and style preferences." %}
+                </p>
+
                 
                 <!-- Search Bar -->
                 <div class="row slide-up">
@@ -31,7 +36,7 @@
                         <div class="input-group mb-4">
                             <input type="text" id="searchInput" class="form-control search-bar" placeholder="Search for products, brands, or categories..." onkeypress="if(event.key==='Enter') performSearch()">
                             <button class="btn btn-primary" type="button" onclick="performSearch()">
-                                <i class="fas fa-search me-2"></i>Search
+                                <i class="fas fa-search me-2"></i>{% trans "Search" %}
                             </button>
                         </div>
                     </div>
@@ -40,11 +45,11 @@
                 <!-- CTA Buttons -->
                 <div class="slide-up">
                     <a href="{% url 'skinly:product_list' %}" class="btn btn-primary btn-lg me-3 mb-2">
-                        <i class="fas fa-palette me-2"></i>Shop Now
+                        <i class="fas fa-palette me-2"></i>{% trans "Shop Now" %}
                     </a>
                     {% if not user.is_authenticated %}
                     <a href="{% url 'skinly:login' %}" class="btn btn-outline-light btn-lg mb-2">
-                        <i class="fas fa-user-plus me-2"></i>Get Personalized
+                        <i class="fas fa-user-plus me-2"></i>{% trans "Get Personalized" %}
                     </a>
                     {% endif %}
                 </div>
@@ -57,8 +62,14 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Shop by Category</h2>
-            <p class="lead text-muted">Explore our curated collection of premium beauty products</p>
+            <h2 class="display-5 fw-bold mb-3" 
+                style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">
+                {% trans "Shop by Category" %}
+            </h2>
+            <p class="lead text-muted">
+                {% trans "Explore our curated collection of premium beauty products" %}
+            </p>
+
         </div>
         
         <div class="row g-4">
@@ -69,8 +80,8 @@
                             <div class="category-icon mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-gold) 0%, var(--muted-gold) 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-circle" style="color: var(--light-cream); font-size: 2rem;"></i>
                             </div>
-                            <h5 class="card-title" style="color: var(--text-primary);">Foundation</h5>
-                            <p class="card-text text-muted">Perfect base for every skin tone</p>
+                            <h5 class="card-title" style="color: var(--text-primary);">{% trans "Foundation" %}</h5>
+                            <p class="card-text text-muted">{% trans "Perfect base for every skin tone" %}</p>
                         </div>
                     </div>
                 </a>
@@ -82,8 +93,8 @@
                             <div class="category-icon mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--warm-brown) 0%, var(--dark-brown) 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-lipstick" style="color: var(--light-cream); font-size: 2rem;"></i>
                             </div>
-                            <h5 class="card-title" style="color: var(--text-primary);">Lipstick</h5>
-                            <p class="card-text text-muted">Bold colors for every occasion</p>
+                            <h5 class="card-title" style="color: var(--text-primary);">{% trans "Lipstick" %}</h5>
+                            <p class="card-text text-muted">{% trans "Bold colors for every occasion" %}</p>
                         </div>
                     </div>
                 </a>
@@ -95,8 +106,8 @@
                             <div class="category-icon mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-sand) 0%, var(--primary-gold) 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-eye" style="color: var(--dark-brown); font-size: 2rem;"></i>
                             </div>
-                            <h5 class="card-title" style="color: var(--text-primary);">Eyeshadow</h5>
-                            <p class="card-text text-muted">Create stunning eye looks</p>
+                            <h5 class="card-title" style="color: var(--text-primary);">{% trans "Eyeshadow" %}</h5>
+                            <p class="card-text text-muted">{% trans "Create stunning eye looks" %}</p>
                         </div>
                     </div>
                 </a>
@@ -109,8 +120,8 @@
 <section class="py-5" style="background: var(--accent-beige);">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Featured Products</h2>
-            <p class="lead text-muted">Handpicked favorites from our collection</p>
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">{% trans "Featured Products" %}</h2>
+            <p class="lead text-muted">{% trans "Handpicked favorites from our collection" %}</p>
         </div>
         
         {% if featured_products %}
@@ -158,13 +169,13 @@
         <div class="text-center py-5">
             <i class="fas fa-palette" style="font-size: 4rem; color: var(--text-light); margin-bottom: 1rem;"></i>
             <h4>No products available yet</h4>
-            <p class="text-muted">Check back soon for amazing makeup products!</p>
+            <p class="text-muted">{% trans "Check back soon for amazing makeup products!" %}</p>
         </div>
         {% endif %}
         
         <div class="text-center mt-4">
             <a href="{% url 'skinly:product_list' %}" class="btn btn-outline-primary btn-lg">
-                <i class="fas fa-th-large me-2"></i>View All Products
+                <i class="fas fa-th-large me-2"></i>{% trans "View All Products" %}
             </a>
         </div>
     </div>
@@ -175,8 +186,8 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">Recommended for You</h2>
-            <p class="lead text-muted">Based on your preferences and skin profile</p>
+            <h2 class="display-5 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--dark-brown);">{% trans "Recommended for You" %}</h2>
+            <p class="lead text-muted">{% trans "Based on your preferences and skin profile" %}</p>
         </div>
         
         <div class="row g-4">
@@ -188,7 +199,7 @@
                             <i class="fas fa-image" style="font-size: 3rem; color: var(--text-light);"></i>
                         </div>
                         <span class="badge position-absolute top-0 start-0 m-2" style="background: var(--primary-gold);">
-                            <i class="fas fa-star me-1"></i>Recommended
+                            <i class="fas fa-star me-1"></i>{% trans "Recommended" %}
                         </span>
                         <button class="btn btn-link position-absolute top-0 end-0 m-2 text-danger" 
                                 id="wishlist-{{ product.id }}" 
@@ -233,8 +244,8 @@
                     <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-shipping-fast" style="color: var(--light-cream); font-size: 2rem;"></i>
                     </div>
-                    <h5 style="color: var(--text-primary);">Free Shipping</h5>
-                    <p class="text-muted">On orders over $50</p>
+                    <h5 style="color: var(--text-primary);">{% trans "Free Shipping" %}</h5>
+                    <p class="text-muted">{% trans "On orders over $50" %}</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -242,8 +253,8 @@
                     <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--warm-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-user-friends" style="color: var(--light-cream); font-size: 2rem;"></i>
                     </div>
-                    <h5 style="color: var(--text-primary);">Personal Recommendations</h5>
-                    <p class="text-muted">AI-powered beauty matching</p>
+                    <h5 style="color: var(--text-primary);">{% trans "Personal Recommendations" %}</h5>
+                    <p class="text-muted">{% trans "AI-powered beauty matching" %}</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -251,8 +262,8 @@
                     <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--muted-gold); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-shield-alt" style="color: var(--light-cream); font-size: 2rem;"></i>
                     </div>
-                    <h5 style="color: var(--text-primary);">Quality Guarantee</h5>
-                    <p class="text-muted">30-day return policy</p>
+                    <h5 style="color: var(--text-primary);">{% trans "Quality Guarantee" %}</h5>
+                    <p class="text-muted">{% trans "30-day return policy" %}</p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -260,8 +271,8 @@
                     <div class="feature-icon mb-3" style="width: 80px; height: 80px; background: var(--dark-brown); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-headset" style="color: var(--light-cream); font-size: 2rem;"></i>
                     </div>
-                    <h5 style="color: var(--text-primary);">Expert Support</h5>
-                    <p class="text-muted">Beauty consultants available 24/7</p>
+                    <h5 style="color: var(--text-primary);">{% trans "Expert Support" %}</h5>
+                    <p class="text-muted">{% trans "Beauty consultants available 24/7" %}</p>
                 </div>
             </div>
         </div>

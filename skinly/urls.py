@@ -16,6 +16,7 @@ urlpatterns = [
     path('search/', views.search_products, name='search_products'),
     path("api/products/", views.products_api, name="products_api"),
     path("productos-aliados/", views.allied_products_view, name="allied_products"),
+    path("beauty-assistant/", views.beauty_assistant, name="beauty_assistant"),
 
     # Cart
     path('cart/', views.cart_view, name='cart'),

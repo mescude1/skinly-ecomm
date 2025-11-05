@@ -118,7 +118,6 @@ LANGUAGES = [
 
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
 
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
@@ -146,7 +145,12 @@ LOGOUT_REDIRECT_URL = '/'
 STATICFILES_DIRS = [
     BASE_DIR / "skinly" / "static",
 ]
-
 # Media files
+import os
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+import os
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDxJncA88XQmHFSMvfZ11u3j4jomEJ_CDA")
