@@ -57,7 +57,6 @@ msgstr "Shipping Info"
 msgid "Returns"
 msgstr "Returns"
 
-
 msgid "Newsletter"
 msgstr "Newsletter"
 
@@ -76,5 +75,77 @@ msgstr "Privacy Policy"
 msgid "Terms of Service"
 msgstr "Terms of Service"
 
-msgid "Contact"
-msgstr "Contact"
+msgid "Discover Your Perfect Look"
+msgstr "Discover Your Perfect Look"
+
+msgid "Premium makeup curated for your unique beauty. Get personalized recommendations based on your skin tone, type, and style preferences."
+msgstr "Premium makeup curated for your unique beauty. Get personalized recommendations based on your skin tone, type, and style preferences."
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Shop Now"
+msgstr "Shop Now"
+
+msgid "Get Personalized"
+msgstr "Get Personalized"
+
+msgid "Shop by Category"
+msgstr "Shop by Category"
+
+msgid "Explore our curated collection of premium beauty products"
+msgstr "Explore our curated collection of premium beauty products"
+
+msgid "Perfect base for every skin tone"
+msgstr "Perfect base for every skin tone"
+
+msgid "Bold colors for every occasion"
+msgstr "Bold colors for every occasion"
+
+msgid "Eyeshadow"
+msgstr "Eyeshadow"
+
+msgid "Create stunning eye looks"
+msgstr "Create stunning eye looks"
+
+msgid "Featured Products"
+msgstr "Featured Products"
+
+msgid "Handpicked favorites from our collection"
+msgstr "Handpicked favorites from our collection"
+
+msgid "Check back soon for amazing makeup products!"
+msgstr "Check back soon for amazing makeup products!"
+
+msgid "View All Products"
+msgstr "View All Products"
+
+msgid "Recommended for You"
+msgstr "Recommended for You"
+
+msgid "Based on your preferences and skin profile"
+msgstr "Based on your preferences and skin profile"
+
+msgid "Recommended"
+msgstr "Recommended"
+
+msgid "Free Shipping"
+msgstr "Free Shipping"
+
+msgid "On orders over $50"
+msgstr "On orders over $50"
+
+msgid "Personal Recommendations"
+msgstr "Personal Recommendations"
+
+msgid "AI-powered beauty matching"
+msgstr "AI-powered beauty matching"
+
+msgid "Quality Guarantee"
+msgstr "Quality Guarantee"
+
+msgid "30-day return policy"
+msgstr "30-day return policy"
+
+msgid "Expert Support"
+msgstr "Expert Support"

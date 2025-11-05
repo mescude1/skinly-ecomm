@@ -454,6 +454,27 @@
                             </select>
                         </form>
                     </li>
+                    <!-- 💄 Asistente de Belleza -->
+                    <li class="nav-item ms-3 position-relative">
+                        <button id="assistant-toggle" 
+                            class="btn btn-sm" 
+                            style="background-color:#d4af37;color:white;border:none;border-radius:30px;padding:6px 12px;">
+                        💋 Asistente
+                        </button>
+
+                        <div id="assistant-box" 
+                                style="display:none;position:absolute;top:50px;right:0;width:320px;background:white;border:1px solid #ddd;border-radius:12px;padding:15px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:999;">
+                            <h6 style="color:#d4af37;">Asistente de Belleza</h6>
+                            <input type="text" id="assistant-input" placeholder="Pregúntame algo..." 
+                                 class="form-control mb-2">
+                            <button id="assistant-send" 
+                                class="btn btn-warning w-100" 
+                                style="background-color:#d4af37;color:white;border:none;">
+                            Enviar
+                            </button>
+                            <div id="assistant-response" class="mt-2 small text-dark"></div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -608,5 +629,33 @@
         }
     </script>
     {% block extra_js %}{% endblock %}
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggleBtn = document.getElementById("assistant-toggle");
+        const box = document.getElementById("assistant-box");
+        const sendBtn = document.getElementById("assistant-send");
+        const input = document.getElementById("assistant-input");
+        const responseDiv = document.getElementById("assistant-response");
+
+        // Mostrar / ocultar chat
+         toggleBtn.addEventListener("click", () => {
+            box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
+        });
+
+        // Enviar consulta
+        sendBtn.addEventListener("click", async () => {
+            const query = input.value.trim();
+            if (!query) return;
+            responseDiv.innerHTML = "💬 Consultando...";
+            try {
+                const res = await fetch(`/beauty-assistant/?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                responseDiv.innerHTML = `<strong>💄 Respuesta:</strong> ${data.response}`;
+                } catch (error) {
+                    responseDiv.innerHTML = "❌ Error al obtener respuesta. Intenta nuevamente.";
+                }
+            });
+        });
+    </script>
 </body>
 </html>

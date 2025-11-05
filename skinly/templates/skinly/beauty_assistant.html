@@ -1,0 +1,17 @@
+{% extends "skinly/base.html" %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4 text-center">💬 Asesor Virtual de Belleza (Gemini)</h2>
+  <form method="get" class="mb-3">
+    <div class="input-group">
+      <input type="text" name="q" value="{{ user_message }}" class="form-control" placeholder="Ej: ¿Qué base me recomiendas para piel seca?" required>
+      <button class="btn btn-primary" type="submit">Enviar</button>
+    </div>
+  </form>
+  {% if response %}
+  <div class="alert alert-info mt-3">
+    <strong>Gemini:</strong> {{ response|linebreaks }}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
